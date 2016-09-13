@@ -1,0 +1,71 @@
+﻿@model IEnumerable<StowagePlanAnalytics_ITP_2016.Models.Service>
+
+<link href="https://cdn.datatables.net/r/bs-3.3.5/jq-2.1.4,dt-1.10.8/datatables.min.css" rel="stylesheet">
+<script src="https://cdn.datatables.net/r/bs-3.3.5/jqc-1.11.3,dt-1.10.8/datatables.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link href="~/Content/dashboard.css" rel="stylesheet" /> @*just for presentation*@
+
+@section JavaScript
+{
+    @Scripts.Render("~/bundles/Modal")
+    @Scripts.Render("~/bundles/jquery-{version}.js")
+    @Scripts.Render("~/Scripts/Service/serviceTableSetting.js")
+}
+
+<div class="container-fluid">
+    <h2>
+        Services
+        <button id="addBtn" type="button" class="btn btn-create btn-success pull-right btn-md" onclick="location.href='@Url.Action("Create")'"><span class="glyphicon glyphicon-plus"></span> Create New</button>
+    </h2>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12">
+            <!--Content Information list of existing Service-->
+            <!--New one-->
+            <table id="dev-table" class="display table table table-striped table-bordered table-list" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th class="col-sm-10">
+                            @Html.DisplayNameFor(model => model.ServiceCode)
+                        </th>
+                        <th class="col-xs-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="service_code">@Html.DisplayFor(modelItem => item.ServiceCode)</td>
+                            <td>
+                                <div class="btn-toolbar">
+                                    <div class="col-md-6 details-control" style="padding-left: 5px; padding-right:5px;">
+                                        <button data-toggle="tooltip" title="Details" type="button" class="btn btn-info btn-block">
+                                            <span class="glyphicon glyphicon-collapse-down"></span>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6" style="padding-left: 5px; padding-right:5px;">
+                                        <a data-toggle="tooltip" title="Delete" class="btn btn-delete btn-danger btn-block" data-modal="" href="@Url.Action("Delete", "Service" ,new { serviceCode=item.ServiceCode })">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade in'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>

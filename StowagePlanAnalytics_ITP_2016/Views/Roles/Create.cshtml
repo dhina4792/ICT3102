@@ -1,0 +1,70 @@
+﻿@section JavaScript
+{
+    @Scripts.Render("~/Scripts/Roles/rolesValidation.js")
+    @Scripts.Render("~/bundles/jquery-{version}.js")
+}
+
+<h2>Create Roles</h2>
+<hr />
+
+@using (Html.BeginForm("Create", "Roles", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="container-fluid">
+        <!--Duplicate Role  Check-->
+        @if (TempData["message"] != null && TempData["Status"] == "Fail")
+        {
+            <div class="alert alert-danger">
+                <a class="close" data-dismiss="alert">&times;</a>
+                <strong style="width:12px">Error!</strong> Role Name: @Html.Raw(Json.Encode(TempData["message"]))
+            </div>
+        }
+        else if (TempData["message"] != null && TempData["Status"] == "Success")
+        {
+            <div class="alert alert-success">
+
+                <a class="close" data-dismiss="alert">&times;</a>
+
+                <strong style="width:12px">Success!</strong> Role Name: @Html.Raw(Json.Encode(TempData["message"]))
+
+            </div>
+        }
+        <div class="panel panel-default panel-table">
+
+            <!--Panel Title-->
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col col-xs-6">
+                        <h3 class="panel-title">Create Of New Role</h3>
+                    </div>
+                </div>
+            </div>
+            <!-- Panel Content-->
+            <div class="panel-body">
+                <!--Content Information to be input for New Role-->
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Role Name</label>
+                        <div class="col-md-10">
+                            @Html.TextBox("RoleName", null, new { @class = "form-control textbox", placeholder = "EG: Admin", @onchange = "validateRoleCode(this)" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button type="submit" class="btn btn-delete btn-primary pull-right"><span class="glyphicon glyphicon-ok"></span> Submit</button>
+                        </div>
+                    </div>
+                </div>
+                <!--Back To List-->
+                <div>
+                    @Html.ActionLink("Back to List", "Index")
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+}

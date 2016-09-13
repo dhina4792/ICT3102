@@ -1,0 +1,181 @@
+﻿/*Adding glyphicon to clickable panel*/
+.panel-heading .accordion-toggle:after {
+    /* symbol for shown (open) panels */
+    font-family: 'Glyphicons Halflings'; /* essential for enabling glyphicon */
+    content: "\e113"; /* chevron-up, taken from bootstrap.css */
+    float: right; /* adjust as needed */
+    color: grey; /* adjust as needed */
+}
+
+.panel-heading .accordion-toggle.collapsed:after {
+    /* symbol for "collapsed" (closed) panels */
+    content: "\e114"; /* chevron-down, taken from bootstrap.css */
+}
+
+/*No padding classes*/
+.nopadding {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.nopaddingleft {
+    padding-left: 0 !important;
+}
+
+.nopaddingright {
+    padding-right: 0 !important;
+}
+
+.noshadow {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+/*JqPlot data label colors*/
+.jqplot-pie-series .jqplot-data-label {
+    color: white !important;
+}
+
+/*Override parent width*/
+.full-width {
+    position: absolute;
+    display: inline-block;
+    top: 50px;
+    right: calc(-48vw + 50%);
+    bottom: 0;
+    left: calc(-48vw + 50%);
+}
+
+/*Button for Add and Delete in Priority Setting Table*/
+.btn-glyphicon { padding:8px; background:#ffffff; margin-right:4px; }
+.icon-btn { padding: 1px 15px 3px 2px; border-radius:50px;}
+
+
+/*Diagram CSS*/
+/*Set Pie Chart Data Label Colour*/
+.restowChart .jqplot-data-label {
+    /*display: block;
+    height: 40px;
+    width: 40px;
+    line-height: 40px;
+
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+
+    background-color: white;
+    color: white;
+    text-align: center;
+    font-size: 2em;*/
+
+  color: black;
+  font-size: large;
+  font-weight: bold;
+  /*border: 1.5px solid #aaaaaa;*/
+  padding: 1px 3px;
+}
+
+.imoChart .jqplot-data-label {
+    /*display: block;
+    height: 40px;
+    width: 40px;
+    line-height: 40px;
+
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+    border : 1.5px solid black;
+
+    background-color: white;
+    color: white;
+    text-align: center;
+    font-size: 2em;*/
+   
+  color: black;
+  font-size: large;
+  font-weight: bold;
+  /*border: 1.5px solid #aaaaaa;*/
+  padding: 1px 3px;
+}
+
+.oogChart .jqplot-data-label {
+  color: black;
+  font-size: large;
+  font-weight: bold;
+  /*border: 1.5px solid #aaaaaa;*/
+  padding: 1px 3px;
+}
+
+.reeferChart .jqplot-data-label {
+  color: black;
+  font-size: large;
+  font-weight: bold;
+  /*border: 1.5px solid #aaaaaa;*/
+  padding: 1px 3px;
+}
+
+.ciChart .jqplot-point-label {
+  color: black;
+  font-size: large;
+  font-weight: bold;
+  padding: 1px 3px;
+  /*transition: all .2s ease-in-out; /*Grow Smaller*/*/
+}
+
+
+.dataGraph {
+    position: relative;
+}
+
+/*Bordering all the table*/
+.table {
+  border: 0.5px solid #000000;
+}
+.table-bordered > thead > tr > th,
+.table-bordered > tbody > tr > th,
+.table-bordered > tfoot > tr > th,
+.table-bordered > thead > tr > td,
+.table-bordered > tbody > tr > td,
+.table-bordered > tfoot > tr > td {
+   border: 0.5px solid #000000;
+}
+
+/*Export Button CSS*/
+#exportBtn {
+  /*position:fixed;*/
+  /*bottom: 10px;*/
+   position: fixed;
+bottom:20px;
+    right: 50px; 
+    z-index:20;
+  /*right: 90px;
+  width: 100px;
+  padding: 5px;*/
+  display:none;
+  
+}
+
+.progress-bar{
+  background: #66CCFF;
+  box-shadow: none;
+}
+
+.progress {
+    position: relative;
+	height: 25px;
+    border: 0.5px solid rgba(18, 16, 16, 1); 
+    border-radius: 3px; 
+}
+
+.progress > .progress-type {
+	position: absolute;
+	left: 0px;
+	font-weight: 800;
+	padding: 3px 30px 2px 10px;
+	color: rgb(255, 255, 255);
+	background-color: rgba(25, 25, 25, 0.2);
+}
+.progress > .progress-completed {
+	position: absolute;
+	right: 0px;
+	font-weight: 800;
+	padding: 3px 10px 2px;
+}

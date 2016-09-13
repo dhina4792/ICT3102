@@ -1,0 +1,33 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h2 class="modal-title">Delete Files</h2>
+</div>
+<br />
+
+<div class="container-fluid">
+    @using (Html.BeginForm("Delete", "STIFFileManagement", FormMethod.Post))
+    {
+    <div class="row">
+        <div class="col-xs-12">
+            <!--Content Information list of existing Port-->
+            @if (ViewBag.voyageID != null)
+            {
+                <input type="hidden" name="voyageID" value="@ViewBag.voyageID" />
+                <p>Deleting this Voyage will also result in the deletion of related files and calculations.</p>
+                <p>Are you sure you wish to delete Voyage: <strong>@ViewBag.voyageID</strong>?</p>
+            }
+            else
+            {
+                <p>Voyage does not exist.</p>
+            }
+        </div>
+    </div>
+    <div class="btn-toolbar" style="margin-bottom:0.5cm;">
+        @if (ViewBag.voyageID != null)
+        {
+            <button class="btn btn-delete btn-primary pull-right" onclick="$('#deletefilesform').submit()"><span class="glyphicon glyphicon-ok"></span> Submit</button>
+        }
+        <button class="btn btn-primary pull-right" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+    </div>
+    }
+</div>

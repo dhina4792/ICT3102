@@ -1,0 +1,35 @@
+﻿@model IEnumerable<StowagePlanAnalytics_ITP_2016.Models.Port>
+
+<script type="text/javascript" src="~/Scripts/bootstrap-filestyle.min.js"> </script>
+
+<div class="panel panel-default panel-table">
+    <!--Panel Title-->
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="panel-title">Upload Files</h3>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="input-group image-preview">
+        @foreach (var port in Model)
+        {
+            <div class="form-group col-xs-12">
+                <div class="col-xs-4">
+                    @Html.Label("file", port.PortName, new { }) (@Html.Label(port.PortCode, new { }))
+                </div>
+                <div class="col-xs-8">
+                    <input type="file" name="file" class="filestyle" data-buttontext=" Browse File...">
+                    <input type="hidden" name="sequenceno" value="@port.SequenceNo" />
+                </div>
+            </div>
+            <br />
+        }
+        </div>
+        <button type="submit" value="Upload" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-upload"></i> Upload</button>
+    </div>
+</div>
+
+@ViewBag.Message
+

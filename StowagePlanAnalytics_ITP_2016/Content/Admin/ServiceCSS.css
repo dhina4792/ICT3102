@@ -1,0 +1,11 @@
+﻿/*Override css*/
+/*.panel-default > .panel-heading-custom {
+background: #858585; color: #fff; }
+
+.panel-default > .panel-heading-custom2 {
+background: #858585; color: #fff; }
+
+.table-striped>tbody>tr:nth-child(odd)>td,
+.table-striped>tbody>tr:nth-child(odd)>th {
+	background-color: #858585;
+}*/

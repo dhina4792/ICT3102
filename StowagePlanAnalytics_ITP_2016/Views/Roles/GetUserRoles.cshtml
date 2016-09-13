@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "GetUserRoles";
+}
+
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h2 class="modal-title">Get user roles</h2>
+</div>
+<br />
+
+<div class="container-fluid">
+    <div class="panel panel-default panel-table">
+        <div class="panel-body">
+            <div class="form-horizontal">
+                @if (TempData["message"] != null)
+                {
+                    <div class="alert alert-danger">
+
+                        <a class="close" data-dismiss="alert">&times;</a>
+
+                        <strong style="width:12px">Error!</strong> @Html.Raw(Json.Encode(TempData["message"]))
+
+                    </div>
+                }
+
+                @if (ViewBag.GetRolesResult == "invalidUser")
+                {
+                    <div class="alert alert-danger">
+                        <strong>Failed!</strong> User does not exist
+                    </div>
+                }             
+
+
+                @using (Html.BeginForm("GetUserRoles", "Roles"))
+            {
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        @Html.Label("Username", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBox("UserName", null, new { @class = "form-control" })
+                        </div>
+                    </div>
+                                   
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <div class="btn-toolbar">
+                                <button type="submit" class="btn btn-delete btn-primary pull-right"><span class="glyphicon glyphicon-ok"></span> Submit</button>
+                                <button class="btn btn-primary pull-right" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (ViewBag.RolesForThisUser != null)
+                {
+                    <br />
+                    <div>
+                        <h3>Roles for this user </h3>
+                        <ol>
+                            @foreach (string s in ViewBag.RolesForThisUser)
+                            {
+                                <li>@s</li>
+                            }
+                        </ol>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

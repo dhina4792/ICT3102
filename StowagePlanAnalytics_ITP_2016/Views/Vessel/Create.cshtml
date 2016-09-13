@@ -1,0 +1,110 @@
+﻿@model StowagePlanAnalytics_ITP_2016.Models.Vessel
+
+@section JavaScript
+            {
+    @Scripts.Render("~/Scripts/Vessel/vesselValidation.js")
+    @Scripts.Render("~/bundles/jquery-{version}.js")
+}
+
+<h2>Vessels</h2>
+<hr />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="container-fluid">
+        <!--Duplicate Vessel Code Check-->
+        @if (ViewBag.Status != null)
+        {
+            if (ViewBag.Status == "Success")
+            {
+                <div class="alert alert-success">
+                    <a class="close" data-dismiss="alert">&times;</a>
+                    <strong style="width:12px">Success!</strong> @ViewBag.Message
+                </div>
+            }
+            else if (ViewBag.Status == "Fail")
+            {
+                <div class="alert alert-danger">
+                    <a class="close" data-dismiss="alert">&times;</a>
+                    <strong style="width:12px">Error!</strong> @ViewBag.Message
+                </div>
+            }
+        }
+        <div class="panel panel-default panel-table">
+            <!--Panel Title-->
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col col-xs-6">
+                        <h3 class="panel-title">Create Of New Vessel</h3>
+                    </div>
+                </div>
+            </div>
+            <!-- Panel Content-->
+            <div class="panel-body">
+                <!--Content Information to be input for New Vessel-->
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.VesselCode, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.VesselCode, new { htmlAttributes = new { @class = "form-control", placeholder = "EG: OAK", @onchange = "validatePortCode(this)", maxlength = "3", id = "vesselcode" } })
+                            @Html.ValidationMessageFor(model => model.VesselCode, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.VesselName, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.VesselName, new { htmlAttributes = new { @class = "form-control", placeholder = "EG: APL OAKLAND", @onchange = "validatePortCode(this)", id = "vesselname" } })
+                            @Html.ValidationMessageFor(model => model.VesselName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.VesselTEUClassCode, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.VesselTEUClassCode, ViewBag.VesselClassDropList as SelectList, "--- Please Select Vessel Class ---", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.VesselTEUClassCode, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.TEUCapacity, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.TEUCapacity, new { htmlAttributes = new { @class = "form-control", placeholder = "EG: 3000", onblur = "stripNonNumeric(this)", onkeypress = "return isNumber(event)", id = "vesselcapacity" } })
+                            @Html.ValidationMessageFor(model => model.TEUCapacity, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.MaxWeight, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.MaxWeight, new { htmlAttributes = new { @class = "form-control", placeholder = "EG: 118000", onblur = "stripNonNumeric(this)", onkeypress = "return isNumber(event)", id = "vesselweight" } })
+                            @Html.ValidationMessageFor(model => model.MaxWeight, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.MaxReefers, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.MaxReefers, new { htmlAttributes = new { @class = "form-control", placeholder = "EG: 11199", onblur = "stripNonNumeric(this)", onkeypress = "return isNumber(event)", id = "vesselreefer" } })
+                            @Html.ValidationMessageFor(model => model.MaxReefers, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button type="submit" class="btn btn-delete btn-primary btn-md pull-right"><span class="glyphicon glyphicon-ok"></span> Submit</button>
+                        </div>
+                    </div>
+                </div>
+                <!--Back To List-->
+                <div>
+                    @Html.ActionLink("Back to List", "Vessel", "Admin")
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

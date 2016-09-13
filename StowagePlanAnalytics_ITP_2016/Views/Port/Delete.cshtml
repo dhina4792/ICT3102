@@ -1,0 +1,67 @@
+﻿@model StowagePlanAnalytics_ITP_2016.Models.Port
+
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h2 class="modal-title">Delete Port Information</h2>
+</div>
+<br />
+
+<div class="container-fluid">
+    <div class="panel panel-default panel-table">
+        <!-- Panel Content-->
+        <div class="panel-body">
+            <!--Content Information of Delete Port-->
+            @if (Model != null)
+            {
+                using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken();
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PortCode, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.PortCode, new { htmlAttributes = new { @class = "form-control", disabled = "disabled", @readonly = "readonly" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PortName, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.PortName, new { htmlAttributes = new { @class = "form-control", disabled = "disabled", @readonly = "readonly" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.NoOfCranes, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.NoOfCranes, new { htmlAttributes = new { @class = "form-control", disabled = "disabled", @readonly = "readonly" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CostOfMove, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.CostOfMove, new { htmlAttributes = new { @class = "form-control", disabled = "disabled", @readonly = "readonly" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <div class="btn-toolbar">
+                                    <button type="submit" class="btn btn-delete btn-primary btn-md pull-right"><span class="glyphicon glyphicon-ok"></span> Submit</button>
+                                    <button class="btn btn-primary btn-md pull-right" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                @ViewBag.ModelNullMessage
+                <button class="btn btn-primary btn-md pull-right" data-dismiss="modal">OK</button>
+            }
+        </div>
+    </div>
+</div>

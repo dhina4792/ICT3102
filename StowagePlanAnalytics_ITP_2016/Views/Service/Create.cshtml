@@ -1,0 +1,206 @@
+﻿@model StowagePlanAnalytics_ITP_2016.Models.Service
+
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+@section JavaScript
+                    {
+    @Scripts.Render("~/Scripts/Service/servicePriority.js")
+    @Scripts.Render("~/Scripts/Service/serviceValidation.js")
+    @Scripts.Render("~/bundles/jquery-{version}.js")
+}
+
+<h2>Services</h2>
+<hr />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container-fluid">
+        <!--Duplicate Service Code Check-->
+        @if (ViewBag.Status != null)
+        {
+            if (ViewBag.Status == "Success")
+            {
+                <div class="alert alert-success">
+                    <a class="close" data-dismiss="alert">&times;</a>
+                    <strong style="width:12px">Success!</strong> @ViewBag.Message
+                </div>
+            }
+            else if (ViewBag.Status == "Fail")
+            {
+                <div class="alert alert-danger">
+                    <a class="close" data-dismiss="alert">&times;</a>
+                    <strong style="width:12px">Error!</strong> @ViewBag.Message
+                </div>
+            }
+        }
+        
+        <!--Panel Table of Creation of Service-->
+        <div class="panel panel-default panel-table">
+            <!--Panel Title-->
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col col-xs-6">
+                        <h3 class="panel-title">Create New Service</h3>
+                    </div>
+                </div>
+            </div>
+            <!-- Panel Content-->
+            <div class="panel-body">
+                <!--Content Information to be input for New Port-->
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <!--Service Code Input-->
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ServiceCode, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.ServiceCode, new { htmlAttributes = new { @class = "form-control", placeholder = "EG: OAK", @onchange = "validateServiceCode(this)", maxlength = "3", id = "servicecode" } })
+                            @Html.ValidationMessageFor(model => model.ServiceCode, "", new { @class = "text-danger" })
+                            <br />
+                            @Html.ValidationMessageFor(model => model.Ports, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default panel-table">
+                        <!--Service Panel Header-->
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col col-xs-6">
+                                    <h3 class="panel-title">Service</h3>
+                                </div>
+                                <div class="col col-xs-6 text-right">
+                                    <button id="addBtn" type="button" class="btn btn-create btn-success pull-right  btn-md"><span class="glyphicon glyphicon-plus"></span> Add Row</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Service Port Order Table-->
+                        <table class="table table table-striped table-bordered table-list" id="diagnosis_list">
+                            <thead>
+                                <tr><th>Sequence Number</th><th>Sequence Order</th><th>Port Code</th><th>Port Name</th><th>Upload</th><th>Actions</th></tr>
+                            </thead>
+                            <!--Service Port Content-->
+                            <tbody id="tabledivbody">
+                                <tr class="sectionsid" id="sectionsid_1">
+                                    <td class='priority col-sm-1'>1</td>
+                                    <td class='col-sm-1'>
+                                        <a href="javascript:void(0)" class="moveuplink">
+                                            <i class="glyphicon glyphicon-arrow-up"></i>
+                                        </a>
+                                        <a href="javascript:void(0)" class="movedownlink">
+                                            <i class="glyphicon glyphicon-arrow-down"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        @Html.DropDownList("PortCode", ViewBag.PortCodes as List<SelectListItem>, "", new { onchange = "Action(this.value);", @class = "form-control" })
+                                    </td>
+                                    <td>
+                                        @Html.Editor("PortName", new { htmlAttributes = new { @class = "form-control" , @id="portnameid_1"} })                                        
+                                    </td>
+                                    <td class='col-sm-3'>
+                                        @Html.DropDownList("FileUpload", new SelectList(
+                                         new List<Object>{
+                                         new { value = "True", text = "Yes"  },
+                                         new { value = "False", text = "No" }},
+                                          "value",
+                                          "text",
+                                          1), new { @class = "form-control" })
+                                    </td>
+
+                                    <td class='col-xs-1'>
+                                        <div class="col-md-12" style="padding-left: 5px; padding-right:5px;">
+                                            <a data-toggle="tooltip" title="Delete" class="btn btn-delete btn-danger btn-block">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="sectionsid" id="sectionsid_2">
+                                    <td class='priority col-sm-1'>2</td>
+                                    <td class='col-sm-1'>
+                                        <a href="javascript:void(0)" class="moveuplink">
+                                            <i class="glyphicon glyphicon-arrow-up"></i>
+                                        </a>
+                                        <a href="javascript:void(0)" class="movedownlink">
+                                            <i class="glyphicon glyphicon-arrow-down"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        @Html.DropDownList("PortCode", ViewBag.PortCodes as List<SelectListItem>, "", new { onchange = "Action(this.value);", @class = "form-control" })
+                                        
+                                    </td>
+                                    <td>
+                                       @Html.Editor("PortName", new { htmlAttributes = new { @class = "form-control", id = "portnameid_2" } })
+                                    </td>
+                                    <td class='col-sm-3'>
+                                        @Html.DropDownList("FileUpload", new SelectList(
+                                         new List<Object>{
+                                         new { value = "True", text = "Yes"  },
+                                         new { value = "False", text = "No" }},
+                                          "value",
+                                          "text",
+                                          1), new { @class = "form-control" })
+                                    </td>
+                                    <td class='col-sm-1'>
+                                        <div class="col-md-12" style="padding-left: 5px; padding-right:5px;">
+                                            <a data-toggle="tooltip" title="Delete" class="btn btn-delete btn-danger btn-block">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="sectionsid" id="sectionsid_3">
+                                    <td class='priority col-sm-1'>3</td>
+                                    <td class='col-sm-1'>
+                                        <a href="javascript:void(0)" class="moveuplink">
+                                            <i class="glyphicon glyphicon-arrow-up"></i>
+                                        </a>
+                                        <a href="javascript:void(0)" class="movedownlink">
+                                            <i class="glyphicon glyphicon-arrow-down"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        @Html.DropDownList("PortCode", ViewBag.PortCodes as List<SelectListItem>, "", new { onchange = "Action(this.value);", @class = "form-control" })
+                                    </td>
+                                    <td>
+                                       @Html.Editor("PortName", new { htmlAttributes = new { @class = "form-control", id = "portnameid_3" } })
+                                    </td>
+                                    <td class='col-sm-3'>
+                                        @Html.DropDownList("FileUpload", new SelectList(
+                                         new List<Object>{
+                                         new { value = "true", text = "Yes"  },
+                                         new { value = "false", text = "No" }},
+                                          "value",
+                                          "text",
+                                          1), new { @class = "form-control" })
+                                    </td>
+                                    <td class='col-sm-1'>
+                                        <div class="col-md-12" style="padding-left: 5px; padding-right:5px;">
+                                            <a data-toggle="tooltip" title="Delete" class="btn btn-delete btn-danger btn-block">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--Submit Button UI-->
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button type="submit" class="btn btn-delete btn-primary btn-md pull-right"><span class="glyphicon glyphicon-ok"></span> Submit</button>
+                        </div>
+                    </div>
+                </div>
+                <!--Back To List-->
+                <div>
+                    @Html.ActionLink("Back to List", "Index")
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+}

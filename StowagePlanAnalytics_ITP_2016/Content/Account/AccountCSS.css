@@ -1,0 +1,52 @@
+﻿body, html {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.login-bg {
+    height: 100%;
+    background-image: url('../Images/pattern.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.login-logo {
+    height: 70px;
+    width: 200px;
+    position: relative;
+    top: 50px;
+    margin: auto;
+    background-image: url('../Images/SPA_new.gif');
+}
+
+.login-welcome {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 100;
+    font-size: 60px;
+    color: white;
+    position: relative;
+    width: 290px;
+    top: 50px;
+    margin: auto;
+}
+
+.login-box {
+    position: relative;
+    height: 275px;
+    width: 400px;
+    background-color: white;
+    top: 75px;
+    margin: auto;
+}
+
+    .login-box .btn {
+        width: 100%;
+    }
+
+    .login-box h4 {
+        padding-top: 10px;
+        color: #757577;
+    }

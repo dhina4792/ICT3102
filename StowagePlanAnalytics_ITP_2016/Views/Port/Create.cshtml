@@ -1,0 +1,96 @@
+﻿@model StowagePlanAnalytics_ITP_2016.Models.Port
+
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+@section JavaScript
+            {
+    @Scripts.Render("~/Scripts/Port/portValidation.js")
+    @Scripts.Render("~/bundles/jquery-{version}.js")
+}
+
+<h2>Ports</h2>
+<hr />
+
+@using (Html.BeginForm("Create", "Port", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="container-fluid">
+        <!--Duplicate Port Code Check-->
+        @if (ViewBag.Status != null)
+        {
+            if (ViewBag.Status == "Success")
+            {
+                <div class="alert alert-success">
+                    <a class="close" data-dismiss="alert">&times;</a>
+                    <strong style="width:12px">Success!</strong> @ViewBag.Message
+                </div>
+            }
+            else if (ViewBag.Status == "Fail")
+            {
+                <div class="alert alert-danger">
+                    <a class="close" data-dismiss="alert">&times;</a>
+                    <strong style="width:12px">Error!</strong> @ViewBag.Message
+                </div>
+            }
+        }
+        
+        <div class="panel panel-default panel-table">
+            <!--Panel Title-->
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col col-xs-6">
+                        <h3 class="panel-title">Create Of New Port</h3>
+                    </div>
+                </div>
+            </div>
+            <!-- Panel Content-->
+            <div class="panel-body">
+                <!--Content Information to be input for New Port-->
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PortCode, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.PortCode, new { htmlAttributes = new { @class = "form-control", placeholder = "EG: SIN", @onchange = "validatePortCode(this)", maxlength = "3", id = "portcode" } })
+                            @Html.ValidationMessageFor(model => model.PortCode, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PortName, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.PortName, new { htmlAttributes = new { @class = "form-control", placeholder = "EG: SINGAPORE", @onchange = "validatePortCode(this)", id ="portname" } })
+                            @Html.ValidationMessageFor(model => model.PortName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.NoOfCranes, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.NoOfCranes, new { htmlAttributes = new { @class = "form-control", placeholder = "5", onblur = "stripNonNumeric(this)", onkeypress = "return isNumber(event)", maxlength = "2" } })
+                            @Html.ValidationMessageFor(model => model.NoOfCranes, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CostOfMove, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.CostOfMove, new { htmlAttributes = new { @class = "form-control", placeholder = "7.00", onblur = "stripNonNumeric(this)", onkeypress = "return isNumber(event)", id ="portcost" } })
+                            @Html.ValidationMessageFor(model => model.CostOfMove, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button type="submit" class="btn btn-delete btn-primary pull-right"><span class="glyphicon glyphicon-ok"></span> Submit</button>
+                        </div>
+                    </div>
+                </div>
+                <!--Back To List-->
+                <div>
+                    @Html.ActionLink("Back to List", "Index")
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,43 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <a class="dropdown-toggle links" id="dropdownnav" data-toggle="dropdown" href="#">
+            Hello @User.Identity.GetUserName()
+            
+            <span class="caret"></span>
+        </a>        
+
+        if (@User.IsInRole("Admin"))
+        {
+        <ul class="dropdown-menu" role="menu">
+            <li>@Html.ActionLink("Admin Control Panel", "Index", "Admin")</li>
+            <li>@Html.ActionLink("Account Registration", "Register", "Account")</li>
+            <li>@Html.ActionLink("Roles Management", "ManageUserRoles", "Roles")</li>
+            <li>@Html.ActionLink("Account Settings", "Index", "Manage")</li>
+            <li class="divider"></li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log Off</a></li>
+        </ul>
+        }
+        else if (@User.IsInRole("Manager"))
+        {
+            <ul class="dropdown-menu" role="menu">
+                <li>@Html.ActionLink("Admin Control Panel", "Index", "Admin")</li>
+                <li>@Html.ActionLink("Account Settings", "Index", "Manage")</li>
+                <li class="divider"></li>
+                <li><a href="javascript:document.getElementById('logoutForm').submit()">Log Off</a></li>
+            </ul>
+        }
+        else
+        {
+            <ul class="dropdown-menu" role="menu">
+                <li>@Html.ActionLink("Account Settings", "Index", "Manage")</li>
+                <li class="divider"></li>
+                <li><a href="javascript:document.getElementById('logoutForm').submit()">Log Off</a></li>
+            </ul>
+        }
+    }
+}

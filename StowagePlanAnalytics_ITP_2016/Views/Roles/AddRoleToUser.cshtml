@@ -1,0 +1,69 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h2 class="modal-title">Add role to user</h2>
+</div>
+<br />
+
+<div class="container-fluid">
+    <div class="panel panel-default panel-table">
+        <div class="panel-body">
+            <div class="form-horizontal">
+                @if (TempData["message"] != null && TempData["Status"].Equals("Fail"))
+                {
+                    <div class="alert alert-danger">
+
+                        <a class="close" data-dismiss="alert">&times;</a>
+
+                        <strong style="width:12px">Error!</strong> @Html.Raw(Json.Encode(TempData["message"]))
+
+                    </div>
+                }
+                else if (TempData["message"] != null && TempData["Status"].Equals("Success"))
+                {
+                    <div class="alert alert-success">
+
+                        <a class="close" data-dismiss="alert">&times;</a>
+
+                        <strong style="width:12px">Success!</strong> @Html.Raw(Json.Encode(TempData["message"]))
+
+                    </div>
+                }
+
+                @if (ViewBag.AddRolesResult == "invalidUser")
+            {
+                    <div class="alert alert-danger">
+                        <strong>Failed!</strong> User does not exist
+                    </div>
+                }
+                @using (Html.BeginForm("AddRoleToUser", "Roles"))
+            {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+
+                    <div class="form-group">
+                        @Html.Label("Username", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBox("UserName", null, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.Label("Role Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("RoleName", (IEnumerable<SelectListItem>)ViewBag.Roles, "Select ...", new { @class = "form-control" })
+                        </div>
+                    </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <div class="btn-toolbar">
+                                    <button type="submit" class="btn btn-delete btn-primary pull-right"><span class="glyphicon glyphicon-ok"></span> Submit</button>
+                                    <button class="btn btn-primary pull-right" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+            </div>
+        </div>
+    </div>
+

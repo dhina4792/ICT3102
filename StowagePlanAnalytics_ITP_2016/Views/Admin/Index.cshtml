@@ -1,0 +1,52 @@
+﻿
+@section Styles
+{
+    @Styles.Render("~/Content/Admin/AdminCSS.css")
+}
+
+<div class="container-fluid">
+    <h2>Admin Control Panel</h2>
+    <hr />
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <div class="col-md-4">
+                    <figure class="admin-menu">
+                        <a data-toggle="tooltip" title="Port Information" class="btn btn-block" href='@Url.Action("Index", "Port")'>
+                            <img src='@Url.Content("~/Content/Images/Port.jpg")' class="img-thumbnail" width="304" height="236" />
+                        </a>
+                        <figcaption><h1>Ports</h1></figcaption>
+                    </figure>
+                </div>
+                <div class="col-md-4">
+                    <figure class="admin-menu">
+                        <a data-toggle="tooltip" title="Vessel Information" class="btn btn-block" href='@Url.Action("Index", "Vessel")'>
+                            <img src='@Url.Content("~/Content/Images/Vessel.jpg")' class="img-thumbnail" width="304" height="236" />
+                        </a>
+                        <figcaption><h1>Vessels</h1></figcaption>
+                    </figure>
+                </div>
+                <div class="col-md-4">
+                    <figure class="admin-menu">
+                        <a data-toggle="tooltip" title="Service Information" class="btn btn-block" href='@Url.Action("Index", "Service")'>
+                            <img src='@Url.Content("~/Content/Images/VesselService.png")' class="img-thumbnail" width="304" height="236" />
+                        </a>
+                        <figcaption><h1>Services</h1></figcaption>
+                    </figure>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <div class="col-md-4">
+                    <figure class="admin-menu">
+                        <a data-toggle="tooltip" title="STIF Information" class="btn btn-block" href='@Url.Action("Index", "STIFFileManagement")'>
+                            <img src='@Url.Content("~/Content/Images/management.jpg")' class="img-thumbnail" alt="Cinque Terre" width="304" height="236" />
+                        </a>
+                        <figcaption><h1>STIF Files</h1></figcaption>
+                    </figure>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

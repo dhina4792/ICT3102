@@ -1,0 +1,30 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h2 class="modal-title">Delete Files</h2>
+</div>
+<br />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <!--Content Information list of existing Port-->
+            @if (ViewBag.Status == "Success")
+            {
+                <div class="alert alert-success">
+                    <strong style="width:12px">Success!</strong> @ViewBag.Message
+                </div>
+            }
+            else if (ViewBag.Status == "Fail")
+            {
+                <div class="alert alert-danger">
+                    <strong style="width:12px">Error!</strong> @ViewBag.Message
+                </div>
+            }
+        </div>
+    </div>
+    <div class="btn-toolbar" style="margin-bottom:0.5cm;">
+        <button class="btn btn-delete btn-primary pull-right" data-dismiss="modal">OK</button>
+    </div>
+</div>
+
+

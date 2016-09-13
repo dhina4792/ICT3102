@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>@ViewBag.Title</title>
+    <!-- Bootstrap core CSS -->
+    @Styles.Render("~/Content/css")
+    @*Rendering for custom css files for specific pages*@
+    @RenderSection("Styles", required: false)
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @*Reddering for custom JavaScript files for specific pages*@
+    @RenderSection("JavaScript", required: false)
+    @RenderSection("JavaScriptForTesting", required: false)
+
+
+</head>
+<body>
+    <div class="top-bar">
+        <div class="top-bar-wrapper">
+            <div class="logo">
+                <a href="@Url.Action("Main", "Home")"><div class="logo-container"></div></a>
+            </div>
+            <div class="top-bar-links">
+                <div class="links-container">
+                    <a class="links" href="@Url.Action("Main", "Home")">Home</a>
+                    <a class="links" href="@Url.Action("Upload", "File")">STIF Upload</a>
+                    <a class="links" href="@Url.Action("DataAnalysis", "DataAnalysis")">Data Analysis</a>
+                 
+                    @Html.Partial("_LoginPartial")
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-container">
+        <div class="content">
+            @RenderBody()
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,62 @@
+﻿<link href="https://cdn.datatables.net/r/bs-3.3.5/jq-2.1.4,dt-1.10.8/datatables.min.css" rel="stylesheet">
+<script src="https://cdn.datatables.net/r/bs-3.3.5/jqc-1.11.3,dt-1.10.8/datatables.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link href="~/Content/dashboard.css" rel="stylesheet" /> @*just for presentation*@
+
+@section JavaScript
+{
+    @Scripts.Render("~/bundles/Modal")
+    @Scripts.Render("~/bundles/Roles")
+    @Scripts.Render("~/bundles/jquery-{version}.js")
+}
+@section Styles
+{
+    @Styles.Render("~/Content/Admin/AdminCSS.css")
+}
+
+<div class="container-fluid">
+    <h2>
+        Roles Management
+        <button type="button" class="btn btn-create btn-success pull-right  btn-md" onclick="location.href='@Url.Action("Index")'"><span class="glyphicon glyphicon-cog"></span> Roles Listing</button>
+    </h2>
+    <hr />
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <div class="col-md-4">
+                    <figure class="admin-menu">
+                        <a data-toggle="tooltip" title="Add Roles" class="btn btn-block" data-modal="" href="@Url.Action("AddRoleToUser", "Roles")">
+                            <img src='@Url.Content("~/Content/Images/addrolenew.png")' style="background-color:#337ab7;" class="img-thumbnail" width="304" height="236" />
+                        </a>
+                        <figcaption><strong>Add</strong></figcaption>
+                    </figure>
+                </div>
+                <div class="col-md-4">
+                    <figure class="admin-menu">
+                        <a data-toggle="tooltip" title="Get Roles" class="btn btn-block" data-modal="" href="@Url.Action("GetUserRoles", "Roles")">
+                            <img src='@Url.Content("~/Content/Images/getrole.png")' style="background-color:#337ab7;" class="img-thumbnail" width="304" height="236" />
+                        </a>
+                        <figcaption><strong>Get</strong></figcaption>
+                    </figure>
+                </div>
+                <div class="col-md-4">
+                    <figure class="admin-menu">
+                        <a data-toggle="tooltip" title="Delete Roles" class="btn btn-block" data-modal="" href="@Url.Action("DeleteRoleFormUser", "Roles")">
+                            <img src='@Url.Content("~/Content/Images/delrole.png")' style="background-color:#337ab7;" class="img-thumbnail" width="304" height="236" />
+                        </a>
+                        <figcaption><strong>Delete</strong></figcaption>
+                    </figure>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal placeholder-->
+<div id='myModal' class='modal fade in'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>

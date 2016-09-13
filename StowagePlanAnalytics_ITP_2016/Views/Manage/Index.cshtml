@@ -1,0 +1,57 @@
+﻿@model StowagePlanAnalytics_ITP_2016.Models.IndexViewModel
+
+@section JavaScript
+{
+    @Scripts.Render("~/bundles/Modal")
+}
+
+@{
+    ViewBag.Title = "Manage";
+}
+
+<h2>Account Settings</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+
+<div>
+    <hr />
+    <div class="container-fluid">
+        <div class="panel panel-default panel-table">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col col-xs-6">
+                        <h3 class="panel-title">Change Your Account Settings</h3>
+                    </div>
+                </div>
+            </div>
+            <!-- Panel Content-->
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>UserName:</dt>
+                    <dd>@User.Identity.Name</dd>
+                    <dt>Password:</dt>
+                    <dd>
+                        [
+                    @if (Model.HasPassword)
+                    {
+                            <a data-modal="" href="@Url.Action("ChangePassword", "Manage")">
+                                Change your password
+                            </a>
+                    }
+                        ]
+                    </dd>
+                </dl>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade in'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>

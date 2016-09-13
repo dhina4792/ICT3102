@@ -1,0 +1,74 @@
+﻿@model IEnumerable<StowagePlanAnalytics_ITP_2016.Models.FileModel.STIFFile>
+<script type="text/javascript" src="~/Scripts/bootstrap-filestyle.min.js"> </script>
+
+@section JavaScript
+{
+    @Scripts.Render("~/bundles/Modal")
+    @Scripts.Render("~/bundles/jquery-{version}.js")
+}
+
+@{
+    ViewBag.Title = "STIF File Management";
+}
+@using (Html.BeginForm("ReplaceSTIFFiles", "STIFFileManagement", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h2 class="modal-title">View Files Information</h2>
+</div>
+<br />
+
+<input type="hidden" value="@ViewBag.ServiceCode" name="serviceCode" />
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <!--Content Information list of existing Port-->
+            <table class="table table table-striped table-bordered table-list">
+                <tr>
+                    <th>@Html.DisplayName("STIF File Management")</th>
+                    <th class="col-md-2">Actions</th>
+                </tr>
+                @if (Model != null)
+                {
+                    foreach (var stifFile in Model)
+                    {
+                    <tr>
+                        <td>
+                            <strong>Original File: @stifFile.file.FileName</strong>
+                            <br />
+                            <input type="file" name="file" class="filestyle" data-buttonText=" Replace File">
+                            <input type="hidden" name="portSequence" value="@stifFile.portSequence" />
+                            <input type="hidden" name="fileId" value="@stifFile.file.Id" />
+                            <input type="hidden" name="tripId" value="@stifFile.tripId" />
+                        </td>
+
+                        <td>
+                            <div class="btn-toolbar">
+                                <div class="col-md-12" style="padding-left: 5px; padding-right:5px;">
+                                    <br />
+                                    <a data-toggle="tooltip" title="Download" class="btn btn-delete btn-info btn-block" href="@Url.Action("Download", new { id = stifFile.file.Id })">
+                                        <span class="glyphicon glyphicon-download-alt"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                }
+                else
+                {
+                    @ViewBag.Message
+                }
+            </table>
+        </div>
+    </div>
+    <div class="btn-toolbar" style="margin-bottom:0.5cm;">
+        @if (Model != null)
+        {
+        <button type="submit" class="btn btn-delete btn-primary pull-right"><span class="glyphicon glyphicon-ok"></span> Submit</button>
+        }
+        <button class="btn btn-primary pull-right" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+    </div>
+</div>
+}
+

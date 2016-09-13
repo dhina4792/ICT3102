@@ -1,0 +1,29 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h2 class="modal-title">Delete File Information</h2>
+</div>
+<br />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <!--Content Information list of existing Port-->
+            @if (ViewBag.Success == true)
+            {
+                <div class="alert alert-success">
+                    <strong style="width:12px">Success!</strong> Voyage @ViewBag.voyageID has been deleted.
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-danger">
+                    <strong style="width:12px">Error!</strong> Something went wrong with the deletion process. Please try again.
+                </div>
+            }
+        </div>
+    </div>
+    <div class="btn-toolbar" style="margin-bottom:0.5cm;">
+            <button class="btn btn-delete btn-primary pull-right" data-dismiss="modal">OK</button>
+    </div>
+</div>
+

@@ -1,0 +1,36 @@
+﻿.category-row {
+    margin-top: 25px;
+}
+
+figure {
+    position: relative;
+    overflow: hidden;
+    height: 182px;
+    width: 300px;
+}
+
+    figure img {
+        -webkit-filter: brightness(100%);
+    }
+
+.admin-menu {
+    margin-bottom: 50px;
+}
+
+    .admin-menu figcaption {
+        position: absolute;
+        font-size: 50px;
+        color: white;
+        top: 35%;
+        left: -100%;
+    }
+
+    .admin-menu a:hover + figcaption {
+        left: 10%;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .admin-menu img:hover {
+        -webkit-filter: brightness(40%);
+        transition: all 0.2s ease-in-out;
+    }

@@ -1,0 +1,82 @@
+﻿@model IEnumerable<SelectListItem>
+
+@section Styles
+{
+    @Styles.Render("~/Content/File")
+}
+
+@section JavaScript
+{
+    @Scripts.Render("~/bundles/File")
+}
+@if (ViewBag.Status == "Error")
+{
+    <br />
+    <div class="alert alert-danger">
+        <a class="close" data-dismiss="alert">&times;</a>
+        <strong style="width:12px">@ViewBag.Status !</strong> @ViewBag.Message
+    </div>
+}
+else if (ViewBag.Status == "Success")
+{
+    <br />
+    <div class="alert alert-success">
+        <a class="close" data-dismiss="alert">&times;</a>
+        <strong style="width:12px">@ViewBag.Status !</strong> @ViewBag.Message
+    </div>
+}
+
+
+@using (Html.BeginForm("Upload", "File", FormMethod.Post, new { id = "target-form", enctype = "multipart/form-data", onsubmit = "startLoadingBar()" }))
+{
+    <div class="container-fluid">
+        <h2>Upload STIF Files</h2>
+        <hr />
+        <div class="form-inline">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-xs-12">
+                        @Html.Label("ServiceDropdownlist", "Service :", new { @class = "control-label" })
+                        @Html.DropDownList("ServiceDropdownlist", Model, "- Please select a Service -",
+                        new { @onchange = "uploadfile(this);", @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="fileupload" class="col-md-9"></div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+<script>
+    function uploadfile(selectObject) {
+        // If selected options is not option title,
+        if (selectObject.selectedIndex !== 0) {
+            // Get selected value
+            var selectedValue = selectObject.value;
+            // Ajax call to controller
+            $.ajax({
+                type: "POST",
+                url: '/File/_PartialViewServiceUploadFiles',
+                data: '{"serviceCode":"' + selectedValue + '"}',
+                contentType: "application/json; charset=utf-8",
+                success: function (result) {
+                    $('#fileupload').html(result);
+                }
+            });
+        }
+        else {
+            // Selected option title, clear file upload elements
+            $('#fileupload').html("");
+        }
+        console.log(selectObject.selectedIndex);
+        console.log(selectObject.value);
+    }
+</script>

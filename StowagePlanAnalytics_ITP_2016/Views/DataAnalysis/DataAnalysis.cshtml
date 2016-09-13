@@ -1,0 +1,557 @@
+﻿@model IEnumerable<StowagePlanAnalytics_ITP_2016.Models.UsefulInfo>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+@section JavaScriptForTesting
+{
+    @Scripts.Render("~/bundles/DataAnalysis")
+    @Scripts.Render("~/bundles/jqPlot")
+    @Scripts.Render("~/bundles/jquery-{version}.js")
+}
+@section Styles
+{
+    @Styles.Render("~/Content/DataAnalysis")
+}
+@{
+    //Temporary data - only for prototype demo
+    int i = 0;
+}
+
+@*To pass previous search parameter to JS*@
+<input id="DepartHidden" type="hidden" value="@ViewBag.DepartPort" />
+<input id="DestHidden" type="hidden" value="@ViewBag.DestPort" />
+
+<div class="container-fluid">
+    <h2>Data Analysis</h2>
+    <hr />
+    <!-- Form for Normal and Advance Searching -->
+    <form action="/DataAnalysis/Search" method="Post">
+        <!-- Normal Searching -->
+        <div class="panel panel-default panel-table">
+            <div class="panel-heading">
+                <div class="form-group row">
+                    <div class="col-md-2">
+                        <fieldset class="form-group">
+                            <label for="exampleSelect1">Service</label>
+                            @Html.DropDownList("ServiceCode", ViewBag.Services as IEnumerable<SelectListItem>, "Select Service",new { @class = "form-control", @id = "service-ddl", @onchange = "FillDepartList()" })
+                        </fieldset>
+                    </div>
+                    <div class="col-md-2">
+                        <fieldset class="form-group">
+                            <label for="exampleSelect1">Vessel Class</label>
+                            @Html.DropDownList("VesselTEUClassCode", ViewBag.Classes as IEnumerable<SelectListItem>, "Select Vessel", new { @class = "form-control", @id = "class-ddl" })
+                        </fieldset>
+                    </div>
+                    <div class="col-md-3">
+                        <fieldset class="form-group">
+                            <label for="exampleSelect1">Departure Port</label>
+                            @Html.DropDownList("DepPortCode", new SelectList(Enumerable.Empty<SelectListItem>()), "Select Departure", new { @class = "form-control", @id = "depart-ddl" })
+                        </fieldset>
+                    </div>
+                    <div class="col-md-3">
+                        <fieldset class="form-group">
+                            <label for="exampleSelect1">Destination Port</label>
+                            @Html.DropDownList("ArrPortCode", new SelectList(Enumerable.Empty<SelectListItem>()), "Select Destination", new { @class = "form-control", @id = "dest-ddl" })
+                        </fieldset>
+                    </div>
+                    <div class="col-md-2">
+                        <fieldset class="form-group">
+                            <label for="exampleSelect1">Voyage</label>
+                            <input  onblur='stripNonNumeric(this)' onkeypress='return isNumber(event)'   class="form-control" type="text" placeholder = "EG: 009" maxlength = "3" name="VoyageID" @if(ViewBag.VoyageID !=null) { <text> value="@ViewBag.VoyageID" </text> }>
+                        </fieldset>
+                    </div>
+                </div>
+                <!--Submit Parameters for sorting to happen-->
+                <div class="btn-toolbar">
+                    @*<button type="submit" name="btnSearchTL" value="searchTL" class="btn btn-delete btn-primary pull-right"><span class="glyphicon glyphicon-search"></span> searchTL</button>*@
+                    <button type="submit" name="btnSearch" value="search" class="btn btn-delete btn-primary pull-right"><span class="glyphicon glyphicon-search"></span> Search</button>
+                    <button type="button" class="btn btn-primary pull-right" data-toggle="collapse" data-target="#prioritySetting">
+                        <span class="glyphicon glyphicon-cog"></span> Advanced Filter
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Advance Searching / Filtering -->
+        <div id="prioritySetting" class="collapse">
+            <!-- Priority Sorting Table Setting -->
+            <div class="panel panel-default panel-table">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col col-xs-6">
+                            <h3 class="panel-title">Advanced Filter</h3>
+                        </div>
+                        <div class="col col-xs-6 text-right">
+                            <button id="addBtn" type="button" class="btn btn-create btn-success"><span class="glyphicon glyphicon-plus"></span> Add Row</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <table class="table table table-striped table-bordered table-list" id="diagnosis_list">
+                        <thead>
+                            <tr><th>Priority Sequence</th><th>Priority Order</th><th>Sort By</th><th>Min</th><th>Max</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="tabledivbody">
+                            <tr class="sectionsid" id="sectionsid_1">
+                                <td class='priority col-sm-1'>1</td>
+                                <td class='col-sm-1'>
+                                    <a href="javascript:void(0)" class="moveuplink">
+                                        <i class="glyphicon glyphicon-arrow-up"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="movedownlink">
+                                        <i class="glyphicon glyphicon-arrow-down"></i>
+                                    </a>
+                                </td>
+
+                                <td class='col-sm-3'>
+                                    <select class="form-control" name="selectoptionid_1" id="exampleSelect1">
+                                        <option value="CIPlanned">Crane Intensity</option>
+                                        <option value="Ballast">Ballast(mt)</option>
+                                        <option value="TotalMoves">Move Count</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" value="0" min="0" id='min_1' step="any"
+                                           onblur='stripNonNumeric(this)' name="inputMinID_1" onchange="validateTextBoxes(this);" onkeypress='return isNumber(event)'>
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" name="inputMaxID_1" value="0" min="0" id='max_1' step="any"
+                                           onchange="validateTextBoxes(this);" onblur='stripNonNumeric(this)' onkeypress='return isNumber(event)'>
+                                </td>
+                                <td class='col-sm-1'>
+                                    <a class="btn btn-delete btn-danger btn-block"><span class="glyphicon glyphicon-trash"></span></a>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    <!--Submit Parameters for sorting to happen-->
+                    <button name="btnSearch" value="advanceSearch" type="submit" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-filter"></span> Sort Plan</button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+    <hr />
+
+    <!--No Result Found-->
+    @{
+        if (TempData["searchCount"] == "invalidParameters")
+        {
+        <p class="lead"><strong class="text-danger"></strong> Please select all valid parameters for<strong class="text-danger"> Service, Vessel , Departure and Destination Ports</strong></p>
+        <div style="border-top: 1px solid black;"></div>
+        }
+        else if (TempData["searchCount"] == "0")
+        {
+        <p class="lead"><strong class="text-danger">0</strong> search results for <strong class="text-danger">Service : @TempData["searchService"]</strong> </p>
+
+        <div style="border-top: 1px solid black;"></div>
+        }
+        else if (TempData["searchCheck"] == "Voyage")
+        {
+            <p class="lead"><strong class="text-danger">@TempData["searchCount"]</strong> search results for <strong class="text-danger">Voyage : @TempData["searchVoyageID"]</strong> </p>
+
+            <div style="border-top: 1px solid black;"></div>
+        }
+        else if (Model != null)
+        {
+        <p class="lead"><strong class="text-danger">@TempData["searchCount"]</strong> search results for <strong class="text-danger">Service : @TempData["searchService"]</strong></p>
+        <p></p>
+        <div class="col-md-12">
+            <div class="col-md-11"></div>
+            <div class="col-md-1 text-center nopaddingright" style="padding-left:0.7cm;">
+                @if (!TempData["searchCount"].Equals(0)){
+                    <strong>Export?</strong>
+                    }
+            </div>
+        </div>
+        <div style="border-top: 1px solid black;"></div>
+        //<p></p>
+        }
+    }
+
+    <!--List Of Voyages-->
+    <div id="accordion" class="panel-group dataGraph">
+        <!-- TODO: Iteration for layout based on model -->
+        @{
+            if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <!--Visualization Body-->
+                    <div id="visualization-@i" class="container-fluid resultcontainer nopadding">
+                        <p style="display:none" id="ciAgreed-@i">@item.CIAgreed</p>
+                        <div class="panel panel-default col-sm-11 nopadding ">
+                            <!--Short Cut Voyage Information - 7 values-->
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" href="@Url.Content("#collapse" + i)">
+                                        Voyage No: <span id="voyage-@i">@item.VoyageID</span> ( @item.DepPortCode<span class="glyphicon glyphicon-chevron-right"></span>@item.ArrPortCode )
+                                        <span class="col-sm-push-3 col-sm-9" style="position:absolute;">
+                                            <span style="padding-left:inherit" data-toggle="tooltip" title="Crane Intensity">
+                                                <img alt="C.I." src="~/Content/Images/construction-crane.png" />
+                                                <span data-inverse="false" data-float="true">@item.CIPlanned</span>
+                                            </span>
+                                            <span style="padding-left:inherit" data-toggle="tooltip" title="Ballast (metric ton)">
+                                                <img alt="Ballast" src="~/Content/Images/wave.png" />
+                                                <span data-inverse="true" data-float="true">@item.Ballast MT</span>
+                                            </span>
+                                            <span style="padding-left:inherit" data-toggle="tooltip" title="Restow Count">
+                                                <img alt="Restow" src="~/Content/Images/exchange.png" />
+                                                <span data-inverse="true" data-float="false">@item.RestowPercentage%</span>
+                                            </span>
+                                            <span style="padding-left:inherit" data-toggle="tooltip" title="Reefers">
+                                                <img alt="Reefers" src="~/Content/Images/snowflake.png" />
+                                                <span data-inverse="false" data-float="false">@item.ReefersUtilisation%</span>
+                                            </span>
+                                            <span style="padding-left:inherit" data-toggle="tooltip" title="IMO">
+                                                <img alt="IMO" src="~/Content/Images/caution-sign.png" />
+                                                <span data-inverse="false" data-float="false">@item.IMOUtilisation%</span>
+                                            </span>
+                                            <span style="padding-left:inherit" data-toggle="tooltip" title="Bunker HFO (metric ton)">
+                                                <img alt="Bunker" src="~/Content/Images/oil-barrel.png" />
+                                                <span data-inverse="false" data-float="false">@item.BunkerHFO MT</span>
+                                            </span>
+                                            <span style="padding-left:inherit" data-toggle="tooltip" title="Bunker MGOMDO (metric ton)">
+                                                <img alt="Bunker" src="~/Content/Images/oil-barrel.png" />
+                                                <span data-inverse="false" data-float="false">@item.BunkerMGOMDO MT</span>
+                                            </span>
+                                        </span>
+                                    </a>
+                                </h4>
+                            </div>
+                    <!--Drop Down Voyage Information-->
+                    <div data-charts='["visualization-@i","ciChart-@i","restowChart-@i","imoChart-@i","oogChart-@i","reeferChart-@i","dvData-@i"]' id="@Url.Content("collapse" + i)" class="panel-collapse collapse" data-paneldisplay='[@item.CIPlanned, @item.Ballast, @item.RestowMoves]'>
+                        <div class="panel-body">
+                            <div class="container-fluid">
+                                <!--Diagram-->
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="ciChart" id="ciChart-@i"></div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="restowChart" id="restowChart-@i"></div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="imoChart" id="imoChart-@i"></div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="oogChart" id="oogChart-@i"></div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="reeferChart" id="reeferChart-@i"></div>
+                                    </div>
+                                </div>
+                                <br />
+                                <!--New Summary Table-->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading"><strong>Overview Summary</strong> <small> </small></div>
+                                            <div class="table-responsive">
+                                                <div id="dvData-@i">
+                                                    <table id="table-main-@i" class="table table-striped table-bordered table-hover table-condensed" pagination={true}>
+                                                        <thead align="center">
+                                                            <tr class="btn-primary">
+                                                                <th colspan="6" style='text-align:center;vertical-align:middle'> Ship Structure Information</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="col-sm-2">Attributes</th>
+                                                                <th class="col-sm-2">TEU (TEU)</th>
+                                                                <th class="col-sm-2">Weight (MT)</th>
+                                                                <th>IMO (Units)</th>
+                                                                <th>OOG (Units)</th>
+                                                                <th>Reefer (Units)</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!--Capacity-->
+                                                            <tr>
+                                                                <th>Capacity <!--Html.DisplayNameFor(model => model.craneintensity)--></th>
+                                                                <td>@item.TEUCapacity</td>
+                                                                <td>@item.MaxWeight</td>
+                                                                <td>-</td>
+                                                                <td>-</td>
+                                                                <td>@item.ReefersCapacity</td>
+                                                            </tr>
+                                                            <!--Onboard-->
+                                                            <tr>
+                                                                <th>Onboard <!--Html.DisplayNameFor(model => model.craneintensity)--></th>
+                                                                <td>@item.TEUOnboard</td>
+                                                                <td>@item.WeightOnboard</td>
+                                                                <td>@item.IMOUnits</td>
+                                                                <td>@item.OOGUnits</td>
+                                                                <td>@item.ReefersOnboard</td>
+                                                            </tr>
+                                                            <!--Remaining-->
+                                                            <tr>
+                                                                <th>Remaining <!--Html.DisplayNameFor(model => model.craneintensity)--></th>
+                                                                <td>@item.TEURemaining</td>
+                                                                <td>@item.WeightRemaining</td>
+                                                                <td>-</td>
+                                                                <td>-</td>
+                                                                <td>@item.RemainingReefersSlots</td>
+                                                            </tr>
+                                                            <!--Utilization-->
+                                                            <tr>
+                                                                <th>Utilisation <!--Html.DisplayNameFor(model => model.craneintensity)--></th>
+                                                                <td>
+                                                                    <div class="progress">
+                                                                        <div class="progress-bar" role="progressbar" aria-valuenow="@item.TEUUtilisation" aria-valuemin="0" aria-valuemax="100" style="width: @item.TEUUtilisation%;">
+                                                                            <span class="sr-only">@item.TEUUtilisation% Complete</span>
+                                                                        </div>
+                                                                        <span class="progress-completed">@item.TEUUtilisation%</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="progress">
+                                                                        <div class="progress-bar" role="progressbar" aria-valuenow="@item.WeightUtilisation" aria-valuemin="0" aria-valuemax="100" style="width:@item.WeightUtilisation%">
+                                                                            <span class="sr-only">@item.WeightUtilisation% Complete</span>
+                                                                        </div>
+                                                                        <span class="progress-completed">@item.WeightUtilisation%</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="progress">
+                                                                        <div class="progress-bar" role="progressbar" aria-valuenow="@item.IMOUtilisation" aria-valuemin="0" aria-valuemax="100" style="width:@item.IMOUtilisation%">
+                                                                            <span class="sr-only">@item.IMOUtilisation% Complete</span>
+                                                                        </div>
+                                                                        <span class="progress-completed">@item.IMOUtilisation%</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="progress">
+                                                                        <div class="progress-bar" role="progressbar" aria-valuenow="@item.OOGUtilisation" aria-valuemin="0" aria-valuemax="100" style="width:@item.OOGUtilisation%">
+                                                                            <span class="sr-only">@item.OOGUtilisation% Complete</span>
+                                                                        </div>
+                                                                        <span class="progress-completed">@item.OOGUtilisation%</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="progress">
+                                                                        <div class="progress-bar" role="progressbar" aria-valuenow="@item.ReefersUtilisation" aria-valuemin="0" aria-valuemax="100" style="width:@item.ReefersUtilisation%">
+                                                                            <span class="sr-only">@item.ReefersUtilisation% Complete</span>
+                                                                        </div>
+                                                                        <span class="progress-completed">@item.ReefersUtilisation%</span>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                    <!--Move Count Information Table-->
+                                                    <table id="table-movecount-@i" class="table table-striped table-bordered table-hover table-condensed" pagination={true}>
+                                                        <thead align="center">
+                                                            <tr class="btn-primary">
+                                                                <th colspan="6" style='text-align:center;vertical-align:middle'> Container Movement Information</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="col-sm-2">Attributes</th>
+                                                                <th class="col-sm-2">Loaded (Moves)</th>
+                                                                <th class="col-sm-2">Discharged (Moves)</th>
+                                                                <th class="col-sm-2">Restows (Moves)</th>
+                                                                <th class="col-sm-2">Reshifting (Moves)</th>
+                                                                <th>Total (Moves)</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th>Move Count <!--Html.DisplayNameFor(model => model.craneintensity)--></th>
+                                                                <td>@item.LoadedMoves</td>
+                                                                <td>@item.DischargedMoves</td>
+                                                                <td>@item.RestowMoves</td>
+                                                                <td>@item.ReshiftingMoves</td>
+                                                                <td>@item.TotalMoves</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                    <!--Tank Information Table-->
+                                                    <table id="table-tank-@i" class="table table-striped table-bordered table-hover table-condensed" pagination={true}>
+                                                        <thead align="center">
+                                                            <tr class="btn-primary">
+                                                                <th colspan="6" style='text-align:center;vertical-align:middle'> Ship Tank Information</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="col-sm-2">Attributes</th>
+                                                                <th class="col-sm-2">Ballast (MT)</th>
+                                                                <th class="col-sm-2">Bunker Oil HFO (MT)</th>
+                                                                <th>Bunker Oil MGOMDO (MT)</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th>Capacity <!--Html.DisplayNameFor(model => model.craneintensity)--></th>
+                                                                <td>@item.Ballast</td>
+                                                                <td>@item.BunkerHFO</td>
+                                                                <td>@item.BunkerMGOMDO</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                    <!--Owner Information Table-->
+                                                    <table id="table-owner-@i" class="table table-striped table-bordered table-hover table-condensed" pagination={true}>
+                                                        <thead align="center">
+                                                            <tr class="btn-primary">
+                                                                <th colspan="8" style='text-align:center;vertical-align:middle'> Ship Owner Information</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="col-sm-2">Owner</th>
+                                                                @{
+
+                                                                            string[] ownerNames = item.OwnerCount.Split(',');
+                                                                            var count = ownerNames.Length;
+                                                                            foreach (string ownerName in ownerNames)
+                                                                            {
+                                                                                if (ownerName != "")
+                                                                                {
+                                                                                    if (--count > 0)
+                                                                                    {
+                                                                                        string[] ownerDetail = ownerName.Split(':');
+                                                                    <th class="col-sm-1">@ownerDetail[0]</th>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        string[] ownerDetail = ownerName.Split(':');
+                                                                    <th>@ownerDetail[0]</th>
+                                                                                    }
+
+
+                                                                                }
+                                                                            }
+                                                                }
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th class="col-sm-2">Container</th>
+                                                                @{
+                                                                            string[] ownerCounts = item.OwnerCount.Split(',');
+                                                                            var count1 = ownerNames.Length;
+                                                                            foreach (string ownerName in ownerNames)
+                                                                            {
+                                                                                if (ownerName != "")
+                                                                                {
+                                                                                    if (--count1 > 0)
+                                                                                    {
+                                                                                        string[] ownerDetail = ownerName.Split(':');
+                                                                    <td class="col-sm-1">@ownerDetail[1]</td>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        string[] ownerDetail = ownerName.Split(':');
+                                                                    <td>@ownerDetail[1]</td>
+                                                                                    }
+
+
+                                                                                }
+                                                                            }
+                                                                }
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <!--Crane Allocation Table-->
+                                                    <table id="table-owner-@i" class="table table-striped table-bordered table-hover table-condensed" pagination={true}>
+                                                        <thead align="center">
+                                                            <tr class="btn-primary">
+                                                                <th colspan="8" style='text-align:center;vertical-align:middle'> Crane Allocation Information</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="col-sm-2">Crane</th>
+                                                                @{
+                                                                            string[] cranes = item.CraneAllocation.Split(';');
+                                                                            var countCranes = cranes.Length; //Check for last item
+                                                                            foreach (string crane in cranes)
+                                                                            {
+                                                                                if (crane != "")
+                                                                                {
+                                                                                    if (--countCranes > 0)
+                                                                                    {
+                                                                                        string[] craneInfo = crane.Split('-');
+                                                                                        <th class="col-sm-1">@craneInfo[0]</th>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        string[] craneInfo = crane.Split('-');
+                                                                                        <th>@craneInfo[0]</th>
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                }
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th>Bay</th>
+                                                                @{
+                                                                            string[] bays = item.CraneAllocation.Split(';');
+                                                                            foreach (string bay in bays)
+                                                                            {
+                                                                                if (bay != "")
+                                                                                {
+                                                                                    string[] bayNo = bay.Split('-');
+                                                                                    string[] bayNoFromTo = bayNo[1].Split(',');
+                                                                                    if (bayNoFromTo[0] == "0" && bayNoFromTo[1] == "0")
+                                                                                    {
+                                                                                        <td>- to -</td>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <td>@bayNoFromTo[0] to @bayNoFromTo[1]</td>
+                                                                                    }
+
+                                                                                }
+                                                                            }
+                                                                }
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Moves</th>
+                                                                @{
+                                                                            string[] moves = item.CraneAllocation.Split(';');
+                                                                            foreach (string move in moves)
+                                                                            {
+                                                                                if (move != "")
+                                                                                {
+                                                                                    string[] moveCount = move.Split('-');
+                                                                    <td>@moveCount[2]</td>
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        
+                                                            <!--STIF Button-->
+                                                            <div class="btn-toolbar">
+                                                                <a data-toggle="tooltip" title="Download" class="btn btn-primary pull-right" href="@Url.Action("Download", "STIFFileManagement", new { id = item.FileId })">
+                                                                    <span class="glyphicon glyphicon-download-alt"></span> Download STIF
+                                                                </a>
+                                                            </div>
+                                                            <br />
+                                                            <p></p>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Check Box-->
+                        <div class="panel-heading col-sm-1 text-center nopaddingleft nopaddingright">
+                            <input type="checkbox" id="@i" class="referencecheckbox" data-target="@Url.Content("collapse"+i)" />
+                        </div>
+                    </div>
+
+                <br />
+                    <!--Simple Divider-->
+            <p> </p>
+                    <!--Export Button-->
+            <a href="#" data-toggle="tooltip" title="Export CSV" id="exportBtn" class="export btn btn-delete btn-primary pull-right"><span class="glyphicon glyphicon-export"></span></a>
+                                                                                    i++;
+                                                                                }
+                                                                            }
+        }
+    </div>
+</div>
