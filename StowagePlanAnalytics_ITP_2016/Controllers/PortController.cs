@@ -151,5 +151,97 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
                 return PartialView("DeleteConfirmed");
             }
         }
+
+
+        [HttpPost]
+        public ActionResult searchPort(FormCollection collection)
+        {
+            //find out what the type in the textbox.this line will find the html elemet with
+            //the name portName and find its value.it will then store it as a lowercase string
+            string searchValue = Request.Params["portName"].ToLower();
+
+            //to see what kind of button is pressed
+            string searchType = Request.Params["btnSearch"];
+
+            // Retrieve all ports from database
+            var allPorts = portGateway.SelectAll();
+
+            //if normal search button pressed
+            if (searchType == "portSearch")
+            {
+                //initalizing a list to store all the ports for the search results
+                List<Port> searchResultList = new List<Port>();
+                //iterating through each port
+                foreach (var port in allPorts)
+                {
+                    //lowercasing port name and port code
+                    string portName = port.PortName.ToLower();
+                    string portCode = port.PortCode.ToLower();
+
+                    //checking to see if either the port code or port name contains what the user has input
+                    if (portName.Contains(searchValue) || portCode.Contains(searchValue))
+                    {
+                        //insert into the list inialzed above
+                        searchResultList.Add(port);
+                    }
+                }
+                return View("Index", searchResultList);
+            }
+            //if sort alphabeticlly button pressed
+            else if (searchType == "portSortAZ")
+            {
+                //storing a temp port object for comparison later
+                Port temp = null;
+
+                //converting the ineurmable allPorts to a list for bubble sort
+                List<Port> allPortList = allPorts.ToList();
+
+                //BUBBLE SORT
+                for (int i = 0; i < allPortList.Count; i++)
+                {
+                    Port port = allPortList[i];
+                    for (int sort = 0; sort < allPortList.Count() - 1; sort++)
+                    {
+                        if (allPortList[sort].PortName[0] > allPortList[sort + 1].PortName[0])
+                        {
+                            temp = allPortList[sort + 1];
+                            allPortList[sort + 1] = allPortList[sort];
+                            allPortList[sort] = temp;
+                        }
+                    }
+                }
+                //return view with the list
+                return View("Index", allPortList);
+            }
+            //if sort Z-A button pressed
+            else if (searchType == "portSortZA")
+            {
+                //storing a temp port object for comparison later
+                Port temp = null;
+
+                //converting the ineurmable allPorts to a list for bubble sort
+                List<Port> allPortList = allPorts.ToList();
+
+                //BUBBLE SORT(reverse)
+                for (int i = 0; i < allPortList.Count; i++)
+                {
+                    Port port = allPortList[i];
+                    for (int sort = 0; sort < allPortList.Count() - 1; sort++)
+                    {
+                        if (allPortList[sort].PortName[0] < allPortList[sort + 1].PortName[0])
+                        {
+                            temp = allPortList[sort + 1];
+                            allPortList[sort + 1] = allPortList[sort];
+                            allPortList[sort] = temp;
+                        }
+                    }
+                }
+                //return view with the list
+                return View("Index", allPortList);
+            }
+            //return view with the list if none of the buttons pressed
+            return View("Index", allPorts);
+        }
+
     }
 }
