@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Diagnostics;
 
 namespace StowagePlanAnalytics_ITP_2016.Controllers
 {
@@ -13,6 +14,7 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
     public class PortController : Controller
     {
         private PortGateway portGateway = new PortGateway();
+        Stopwatch timePerParse;
 
         // GET: /Admin/Port
         public ActionResult Index()
@@ -155,7 +157,10 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
 
         [HttpPost]
         public ActionResult searchPort(FormCollection collection)
-        {
+        {   
+            // Start a new stopwatch timer.
+            timePerParse = Stopwatch.StartNew();
+
             //find out what the type in the textbox.this line will find the html elemet with
             //the name portName and find its value.it will then store it as a lowercase string
             string searchValue = Request.Params["portName"].ToLower();
@@ -185,7 +190,13 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
                         searchResultList.Add(port);
                     }
                 }
+                timePerParse.Stop();
+                Debug.WriteLine("Time elapsed (s): {0}", timePerParse.Elapsed.TotalSeconds);
+                Debug.WriteLine("Time elapsed (ms): {0}", timePerParse.Elapsed.TotalMilliseconds);
+                Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
                 return View("Index", searchResultList);
+
+
             }
             //if sort alphabeticlly button pressed
             else if (searchType == "portSortAZ")
@@ -211,6 +222,10 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
                     }
                 }
                 //return view with the list
+                timePerParse.Stop();
+                Debug.WriteLine("Time elapsed (s): {0}", timePerParse.Elapsed.TotalSeconds);
+                Debug.WriteLine("Time elapsed (ms): {0}", timePerParse.Elapsed.TotalMilliseconds);
+                Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
                 return View("Index", allPortList);
             }
             //if sort Z-A button pressed
@@ -237,9 +252,17 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
                     }
                 }
                 //return view with the list
+                timePerParse.Stop();
+                Debug.WriteLine("Time elapsed (s): {0}", timePerParse.Elapsed.TotalSeconds);
+                Debug.WriteLine("Time elapsed (ms): {0}", timePerParse.Elapsed.TotalMilliseconds);
+                Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
                 return View("Index", allPortList);
             }
             //return view with the list if none of the buttons pressed
+            timePerParse.Stop();
+            Debug.WriteLine("Time elapsed (s): {0}", timePerParse.Elapsed.TotalSeconds);
+            Debug.WriteLine("Time elapsed (ms): {0}", timePerParse.Elapsed.TotalMilliseconds);
+            Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
             return View("Index", allPorts);
         }
 
