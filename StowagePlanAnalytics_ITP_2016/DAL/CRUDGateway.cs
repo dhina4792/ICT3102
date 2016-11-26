@@ -27,6 +27,10 @@ namespace StowagePlanAnalytics_ITP_2016.DAL
         {
             return data.ToList();
         }
+        public T[] SelectAllArray()
+        {
+            return data.ToArray();
+        }
 
         public virtual T SelectByPrimaryKey(string key)
         {

@@ -157,43 +157,118 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
 
         [HttpPost]
         public ActionResult searchPort(FormCollection collection)
-        {   
-            // Start a new stopwatch timer.
+        {
+            // ------------------------------------------------Array -----------------------
+            //ARRAY
+            //// Start a new stopwatch timer.
+            //timePerParse = Stopwatch.StartNew();
+            ////find out what the type in the textbox.this line will find the html elemet with
+            ////the name portName and find its value.it will then store it as a lowercase string
+            //string searchValue = Request.Params["portName"];
+            ////to see what kind of button is pressed
+            //string searchType = Request.Params["btnSearch"];
+            //// Retrieve all ports from database
+            //var allPorts = portGateway.SelectAll();
+            ////if normal search button pressed
+            //if (searchType == "portSearch")
+            //{
+            //    // Start a new stopwatch timer.
+            //    timePerParse = Stopwatch.StartNew();
+            //    // Retrieve all ports from database
+            //    Port[] testSearch = portGateway.SelectAllArray();
+
+            //    var testPort = portGateway.SelectAll();
+
+            //    //if normal search button pressed
+            //    SortedDictionary<string, Port> portAll = new SortedDictionary<string, Port>();
+
+            //    foreach(var port in testPort)
+            //    {
+            //        portAll[port.PortCode] = port;
+            //    }
+
+            //    List<Port> searchResultList = new List<Port>();
+            //    //if (portAll.ContainsKey(searchValue))
+            //    //{
+            //    //    searchResultList.Add(portAll[searchValue]);
+            //    //}
+
+            //    //initalizing a list to store all the ports for the search results
+
+            //    //iterating through each port
+            //    for (int i = 0; i < testSearch.Length; i++)
+            //    {
+            //        if (testSearch[i].PortCode == searchValue)
+            //        {
+            //            searchResultList.Add(testSearch[i]);
+            //        }
+            //    }
+
+
+
+            //    timePerParse.Stop();
+            //    Debug.WriteLine("DATA STRUCTURE: ARRAY");
+            //    Debug.WriteLine("Time elapsed (s): {0}", timePerParse.Elapsed.TotalSeconds);
+            //    Debug.WriteLine("Time elapsed (ms): {0}", timePerParse.Elapsed.TotalMilliseconds);
+            //    Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
+            //    return View("Index", searchResultList);
+
+            //------------------------------------------- HASH MAP ---------------------------------------------
+            //HASH MAP
             timePerParse = Stopwatch.StartNew();
-            //find out what the type in the textbox.this line will find the html elemet with
-            //the name portName and find its value.it will then store it as a lowercase string
-            string searchValue = Request.Params["portName"].ToLower();
-            //to see what kind of button is pressed
-            string searchType = Request.Params["btnSearch"];
-            // Retrieve all ports from database
-            var allPorts = portGateway.SelectAll();
-            //if normal search button pressed
-            if (searchType == "portSearch")
-            {
-                //initalizing a list to store all the ports for the search results
-                List<Port> searchResultList = new List<Port>();
-                //iterating through each port
-                foreach (var port in allPorts)
+                //find out what the type in the textbox.this line will find the html elemet with
+                //the name portName and find its value.it will then store it as a lowercase string
+                string searchValue = Request.Params["portName"];
+                //to see what kind of button is pressed
+                string searchType = Request.Params["btnSearch"];
+                // Retrieve all ports from database
+                var allPorts = portGateway.SelectAll();
+                //if normal search button pressed
+                if (searchType == "portSearch")
                 {
-                    //lowercasing port name and port code
-                    string portName = port.PortName.ToLower();
-                    string portCode = port.PortCode.ToLower();
+                    // Start a new stopwatch timer.
+                    timePerParse = Stopwatch.StartNew();
+                    // Retrieve all ports from database
+                    Port[] testSearch = portGateway.SelectAllArray();
 
-                    //checking to see if either the port code or port name contains what the user has input
-                    if (portName.Contains(searchValue) || portCode.Contains(searchValue))
+                    var testPort = portGateway.SelectAll();
+
+                    //if normal search button pressed
+                    SortedDictionary<string, Port> portAll = new SortedDictionary<string, Port>();
+
+                    foreach (var port in testPort)
                     {
-                        //insert into the list inialzed above
-                        searchResultList.Add(port);
+                        portAll[port.PortCode] = port;
                     }
+
+                    List<Port> searchResultList = new List<Port>();
+                    if (portAll.ContainsKey(searchValue))
+                    {
+                        searchResultList.Add(portAll[searchValue]);
+                    }
+
+                    //initalizing a list to store all the ports for the search results
+
+                    //iterating through each port
+                    //for (int i = 0; i < testSearch.Length; i++)
+                    //{
+                    //    if (testSearch[i].PortCode == searchValue)
+                    //    {
+                    //        searchResultList.Add(testSearch[i]);
+                    //    }
+                    //}
+
+
+
+                    timePerParse.Stop();
+                    Debug.WriteLine("DATA STRUCTURE: HASH MAP");
+                    Debug.WriteLine("Time elapsed (s): {0}", timePerParse.Elapsed.TotalSeconds);
+                    Debug.WriteLine("Time elapsed (ms): {0}", timePerParse.Elapsed.TotalMilliseconds);
+                    Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
+                    return View("Index", searchResultList);
+
+
                 }
-                timePerParse.Stop();
-                Debug.WriteLine("Time elapsed (s): {0}", timePerParse.Elapsed.TotalSeconds);
-                Debug.WriteLine("Time elapsed (ms): {0}", timePerParse.Elapsed.TotalMilliseconds);
-                Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
-                return View("Index", searchResultList);
-
-
-            }
             //if sort alphabeticlly button pressed
             else if (searchType == "portSortAZ")
             {
@@ -254,6 +329,7 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
                 Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
                 return View("Index", allPortList);
             }
+
             //return view with the list if none of the buttons pressed
             timePerParse.Stop();
             Debug.WriteLine("Time elapsed (s): {0}", timePerParse.Elapsed.TotalSeconds);
@@ -266,28 +342,36 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
             // Start a new stopwatch timer.
             timePerParse = Stopwatch.StartNew();
             // Retrieve all ports from database
-            var allPorts = portGateway.SelectAll();
+            Port[] testSearch = portGateway.SelectAll().Cast<Port>().ToArray();
             //if normal search button pressed
 
-                //initalizing a list to store all the ports for the search results
-                List<Port> searchResultList = new List<Port>();
-                //iterating through each port
-                foreach (var port in allPorts)
+            //initalizing a list to store all the ports for the search results
+            List<Port> searchResultList = new List<Port>();
+            //iterating through each port
+            for (int i = 0; i < testSearch.Length; i++)
+            {
+                if (testSearch[i].PortName == searchValue)
                 {
-                    //lowercasing port name and port code
-                    string portName = port.PortName.ToLower();
-                    string portCode = port.PortCode.ToLower();
-
-                    //checking to see if either the port code or port name contains what the user has input
-                    if (portName.Contains(searchValue) || portCode.Contains(searchValue))
-                    {
-                        //insert into the list inialzed above
-                        searchResultList.Add(port);
-                    }
+                    searchResultList.Add(testSearch[i]);
                 }
-           
+            }
+            //foreach (var port in allPorts)
+            //{
+            //    //lowercasing port name and port code
+            //    string portName = port.PortName.ToLower();
+            //    string portCode = port.PortCode.ToLower();
+
+            //    //checking to see if either the port code or port name contains what the user has input
+            //    if (portName.Contains(searchValue) || portCode.Contains(searchValue))
+            //    {
+            //        //insert into the list inialzed above
+            //        searchResultList.Add(port);
+            //    }
+            //}
+
 
             timePerParse.Stop();
+            Debug.WriteLine("DATA STRUCTURE: ARRAY");
             Debug.WriteLine("Time elapsed (s): {0}", timePerParse.Elapsed.TotalSeconds);
             Debug.WriteLine("Time elapsed (ms): {0}", timePerParse.Elapsed.TotalMilliseconds);
             Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
@@ -365,6 +449,22 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
                 return View("Index", allPortList);
             }
             else if (sortType == "portSortMerge")
+            {
+                // Start a new stopwatch timer.
+                timePerParse = Stopwatch.StartNew();
+                // Retrieve all ports from database
+                Port[] allPortsTest = portGateway.SelectAll().Cast<Port>().ToArray(); ;
+                //if normal search button pressed
+                MergeSort_Recursive(allPortsTest, 0, allPortsTest.Length - 1);
+
+                timePerParse.Stop();
+                Debug.WriteLine("MERGE SORT");
+                Debug.WriteLine("Time elapsed (s): {0}", timePerParse.Elapsed.TotalSeconds);
+                Debug.WriteLine("Time elapsed (ms): {0}", timePerParse.Elapsed.TotalMilliseconds);
+                Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
+                return View("Index", allPortsTest);
+            }
+            else if (sortType == "portSearch")
             {
                 // Start a new stopwatch timer.
                 timePerParse = Stopwatch.StartNew();
