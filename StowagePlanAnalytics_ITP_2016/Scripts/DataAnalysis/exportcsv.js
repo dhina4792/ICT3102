@@ -1,6 +1,8 @@
 ﻿$(document).ready(function () {
 
     function exportTableToCSV(filename) {
+        console.time("exporttoCSV");
+        console.profile("export");
         var csvContent = "";
 
         // Header row for the csv file
@@ -86,7 +88,8 @@
                 'href': csvData,
                 'target': '_blank'
             });
-
+        console.profileEnd("export");
+        console.timeEnd("exporttoCSV");
     }
 
     $(".export").click(function () {

@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace StowagePlanAnalytics_ITP_2016.Controllers
 {
-    [Authorize(Roles = "Admin, Manager")]
+
     public class PortController : Controller
     {
         private PortGateway portGateway = new PortGateway();
@@ -160,17 +160,13 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
         {   
             // Start a new stopwatch timer.
             timePerParse = Stopwatch.StartNew();
-
             //find out what the type in the textbox.this line will find the html elemet with
             //the name portName and find its value.it will then store it as a lowercase string
             string searchValue = Request.Params["portName"].ToLower();
-
             //to see what kind of button is pressed
             string searchType = Request.Params["btnSearch"];
-
             // Retrieve all ports from database
             var allPorts = portGateway.SelectAll();
-
             //if normal search button pressed
             if (searchType == "portSearch")
             {
@@ -265,6 +261,279 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
             Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
             return View("Index", allPorts);
         }
+        public ActionResult search(string searchValue)
+        {
+            // Start a new stopwatch timer.
+            timePerParse = Stopwatch.StartNew();
+            // Retrieve all ports from database
+            var allPorts = portGateway.SelectAll();
+            //if normal search button pressed
 
+                //initalizing a list to store all the ports for the search results
+                List<Port> searchResultList = new List<Port>();
+                //iterating through each port
+                foreach (var port in allPorts)
+                {
+                    //lowercasing port name and port code
+                    string portName = port.PortName.ToLower();
+                    string portCode = port.PortCode.ToLower();
+
+                    //checking to see if either the port code or port name contains what the user has input
+                    if (portName.Contains(searchValue) || portCode.Contains(searchValue))
+                    {
+                        //insert into the list inialzed above
+                        searchResultList.Add(port);
+                    }
+                }
+           
+
+            timePerParse.Stop();
+            Debug.WriteLine("Time elapsed (s): {0}", timePerParse.Elapsed.TotalSeconds);
+            Debug.WriteLine("Time elapsed (ms): {0}", timePerParse.Elapsed.TotalMilliseconds);
+            Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
+            return View("Index", searchResultList);
+        }
+        [HttpPost]
+        public ActionResult sort()
+        {
+            // Start a new stopwatch timer.
+            timePerParse = Stopwatch.StartNew();
+            // Retrieve all ports from database
+            var allPorts = portGateway.SelectAll();
+            //if normal search button pressed
+            string sortType = Request.Params["btnSearch"];
+            //initalizing a list to store all the ports for the search results
+            List<Port> searchResultList = new List<Port>();
+            if (sortType == "portSortAZ")
+            {
+                //storing a temp port object for comparison later
+                Port temp = null;
+
+                //converting the ineurmable allPorts to a list for bubble sort
+                List<Port> allPortList = allPorts.ToList();
+
+                //BUBBLE SORT
+                for (int i = 0; i < allPortList.Count; i++)
+                {
+                    Port port = allPortList[i];
+                    for (int sort = 0; sort < allPortList.Count() - 1; sort++)
+                    {
+                        if (allPortList[sort].PortName[0] > allPortList[sort + 1].PortName[0])
+                        {
+                            temp = allPortList[sort + 1];
+                            allPortList[sort + 1] = allPortList[sort];
+                            allPortList[sort] = temp;
+                        }
+                    }
+                }
+                //return view with the list
+                timePerParse.Stop();
+                Debug.WriteLine("Time elapsed (s): {0}", timePerParse.Elapsed.TotalSeconds);
+                Debug.WriteLine("Time elapsed (ms): {0}", timePerParse.Elapsed.TotalMilliseconds);
+                Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
+                return View("Index", allPortList);
+            }
+            //if sort Z-A button pressed
+            else if (sortType == "portSortZA")
+            {
+                //storing a temp port object for comparison later
+                Port temp = null;
+
+                //converting the ineurmable allPorts to a list for bubble sort
+                List<Port> allPortList = allPorts.ToList();
+
+                //BUBBLE SORT(reverse)
+                for (int i = 0; i < allPortList.Count; i++)
+                {
+                    Port port = allPortList[i];
+                    for (int sort = 0; sort < allPortList.Count() - 1; sort++)
+                    {
+                        if (allPortList[sort].PortName[0] < allPortList[sort + 1].PortName[0])
+                        {
+                            temp = allPortList[sort + 1];
+                            allPortList[sort + 1] = allPortList[sort];
+                            allPortList[sort] = temp;
+                        }
+                    }
+                }
+                //return view with the list
+                timePerParse.Stop();
+                Debug.WriteLine("BUBBLE SORT");
+                Debug.WriteLine("Time elapsed (s): {0}", timePerParse.Elapsed.TotalSeconds);
+                Debug.WriteLine("Time elapsed (ms): {0}", timePerParse.Elapsed.TotalMilliseconds);
+                Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
+                return View("Index", allPortList);
+            }
+            else if (sortType == "portSortMerge")
+            {
+                // Start a new stopwatch timer.
+                timePerParse = Stopwatch.StartNew();
+                // Retrieve all ports from database
+                Port[] allPortsTest = portGateway.SelectAll().Cast<Port>().ToArray(); ;
+                //if normal search button pressed
+                MergeSort_Recursive(allPortsTest, 0, allPortsTest.Length - 1);
+
+                timePerParse.Stop();
+                Debug.WriteLine("MERGE SORT");
+                Debug.WriteLine("Time elapsed (s): {0}", timePerParse.Elapsed.TotalSeconds);
+                Debug.WriteLine("Time elapsed (ms): {0}", timePerParse.Elapsed.TotalMilliseconds);
+                Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
+                return View("Index", allPortsTest);
+            }
+            //return view with the list if none of the buttons pressed
+            timePerParse.Stop();
+            Debug.WriteLine("Time elapsed (s): {0}", timePerParse.Elapsed.TotalSeconds);
+            Debug.WriteLine("Time elapsed (ms): {0}", timePerParse.Elapsed.TotalMilliseconds);
+            Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
+            return View("Index", allPorts);
+        }
+        public ActionResult sortMerge()
+        {
+            // Start a new stopwatch timer.
+            timePerParse = Stopwatch.StartNew();
+            // Retrieve all ports from database
+            Port[]  allPorts = portGateway.SelectAll().Cast<Port>().ToArray(); ;
+            //if normal search button pressed
+            MergeSort_Recursive(allPorts, 0, allPorts.Length - 1);
+
+            timePerParse.Stop();
+            Debug.WriteLine("Time elapsed (s): {0}", timePerParse.Elapsed.TotalSeconds);
+            Debug.WriteLine("Time elapsed (ms): {0}", timePerParse.Elapsed.TotalMilliseconds);
+            Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
+            return View("Index", allPorts);
+        }
+        public ActionResult searchsortAZ(string searchValue)
+        {
+            // Start a new stopwatch timer.
+            timePerParse = Stopwatch.StartNew();
+            // Retrieve all ports from database
+            var allPorts = portGateway.SelectAll();
+            //if normal search button pressed
+
+            //initalizing a list to store all the ports for the search results
+            List<Port> searchResultList = new List<Port>();
+            //iterating through each port
+            foreach (var port in allPorts)
+            {
+                //lowercasing port name and port code
+                string portName = port.PortName.ToLower();
+                string portCode = port.PortCode.ToLower();
+
+                //checking to see if either the port code or port name contains what the user has input
+                if (portName.Contains(searchValue) || portCode.Contains(searchValue))
+                {
+                    //insert into the list inialzed above
+                    searchResultList.Add(port);
+                }
+            }
+            //storing a temp port object for comparison later
+            Port temp = null;
+
+            //BUBBLE SORT
+            for (int i = 0; i < searchResultList.Count; i++)
+            {
+                Port port = searchResultList[i];
+                for (int sort = 0; sort < searchResultList.Count() - 1; sort++)
+                {
+                    if (searchResultList[sort].PortName[0] > searchResultList[sort + 1].PortName[0])
+                    {
+                        temp = searchResultList[sort + 1];
+                        searchResultList[sort + 1] = searchResultList[sort];
+                        searchResultList[sort] = temp;
+                    }
+                }
+            }
+
+            timePerParse.Stop();
+            Debug.WriteLine("Time elapsed (s): {0}", timePerParse.Elapsed.TotalSeconds);
+            Debug.WriteLine("Time elapsed (ms): {0}", timePerParse.Elapsed.TotalMilliseconds);
+            Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
+            return View("Index", searchResultList);
+
+        }
+        static public void DoMerge(Port[] allPorts, int left, int mid, int right)
+        {
+            Port[] temp = new Port[10033];
+            int i, left_end, num_elements, tmp_pos;
+
+            left_end = (mid - 1);
+            tmp_pos = left;
+            num_elements = (right - left + 1);
+
+            while ((left <= left_end) && (mid <= right))
+            {
+                if (allPorts[left].PortName[0] >= allPorts[mid].PortName[0])
+                    temp[tmp_pos++] = allPorts[left++];
+                else
+                    temp[tmp_pos++] = allPorts[mid++];
+            }
+
+            while (left <= left_end)
+                temp[tmp_pos++] = allPorts[left++];
+
+            while (mid <= right)
+                temp[tmp_pos++] = allPorts[mid++];
+
+            for (i = 0; i < num_elements; i++)
+            {
+                allPorts[right] = temp[right];
+                right--;
+            }
+        }
+
+        static public void MergeSort_Recursive(Port[] allPorts, int left, int right)
+        {
+            int mid;
+
+            if (right > left)
+            {
+                mid = (right + left) / 2;
+                MergeSort_Recursive(allPorts, left, mid);
+                MergeSort_Recursive(allPorts, (mid + 1), right);
+
+                DoMerge(allPorts, left, (mid + 1), right);
+            }
+        }
+
+        public static void Quicksort(IComparable[] elements, int left, int right)
+        {
+            int i = left, j = right;
+            IComparable pivot = elements[(left + right) / 2];
+
+            while (i <= j)
+            {
+                while (elements[i].CompareTo(pivot) < 0)
+                {
+                    i++;
+                }
+
+                while (elements[j].CompareTo(pivot) > 0)
+                {
+                    j--;
+                }
+
+                if (i <= j)
+                {
+                    // Swap
+                    IComparable tmp = elements[i];
+                    elements[i] = elements[j];
+                    elements[j] = tmp;
+
+                    i++;
+                    j--;
+                }
+            }
+
+            // Recursive calls
+            if (left < j)
+            {
+                Quicksort(elements, left, j);
+            }
+
+            if (i < right)
+            {
+                Quicksort(elements, i, right);
+            }
+        }
     }
 }

@@ -19,11 +19,6 @@ $(function () {
         }
     });
 
-
-    //asdasd
-    var plot;
-    var charts = $('#' + event.target.id).data('charts');
-
 });
 
 //CraneIntensity

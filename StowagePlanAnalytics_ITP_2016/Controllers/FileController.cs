@@ -9,6 +9,7 @@ using StowagePlanAnalytics_ITP_2016.Models;
 using StowagePlanAnalytics_ITP_2016.DAL;
 using StowagePlanAnalytics_ITP_2016.Calculations;
 using System.Threading;
+using System.Diagnostics;
 
 namespace StowagePlanAnalytics_ITP_2016.Controllers
 {
@@ -16,6 +17,7 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
     public class FileController : Controller
     {
         DataGateway gw = new DataGateway();
+        Stopwatch timePerParse;
         // GET: File
         public ActionResult Index()
         {
@@ -26,8 +28,8 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
         {
             // Retrieve Data from database
             ServiceGateway serviceGateway = new ServiceGateway();
-            var service = serviceGateway.SelectByPrimaryKey(serviceCode);
-            //var service = gw.GetService(serviceCode);
+            //var service = serviceGateway.SelectByPrimaryKey(serviceCode);
+            var service = gw.GetService(serviceCode);
 
             // If service not found in database
             if (service == null)
@@ -92,6 +94,8 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
         [HttpPost]
         public ActionResult Upload(HttpPostedFileBase[] file, int[] sequenceno, string ServiceDropdownlist)
         {
+            // Start a new stopwatch timer.
+            timePerParse = Stopwatch.StartNew();
             // Verify valid number of files and corresponding sequenceno
             if (file.Length != sequenceno.Length)
             {
@@ -135,7 +139,10 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
                     return RedirectToAction("Upload", "File", new { uploadResult = "processError" });
                 }
             }
-
+            timePerParse.Stop();
+            Debug.WriteLine("Time elapsed (s): {0}", timePerParse.Elapsed.TotalSeconds);
+            Debug.WriteLine("Time elapsed (ms): {0}", timePerParse.Elapsed.TotalMilliseconds);
+            Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
             return RedirectToAction("Upload", "File", new { uploadResult = "success" });
         }
 
