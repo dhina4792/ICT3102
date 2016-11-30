@@ -159,9 +159,9 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
         public ActionResult searchPort(FormCollection collection)
         {
             // ------------------------------------------------Array -----------------------
-            //ARRAY
+
             //// Start a new stopwatch timer.
-            //timePerParse = Stopwatch.StartNew();
+
             ////find out what the type in the textbox.this line will find the html elemet with
             ////the name portName and find its value.it will then store it as a lowercase string
             //string searchValue = Request.Params["portName"];
@@ -182,7 +182,7 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
             //    //if normal search button pressed
             //    SortedDictionary<string, Port> portAll = new SortedDictionary<string, Port>();
 
-            //    foreach(var port in testPort)
+            //    foreach (var port in testPort)
             //    {
             //        portAll[port.PortCode] = port;
             //    }
@@ -196,9 +196,13 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
             //    //initalizing a list to store all the ports for the search results
 
             //    //iterating through each port
+            //    timePerParse = Stopwatch.StartNew();
+
+
+
             //    for (int i = 0; i < testSearch.Length; i++)
             //    {
-            //        if (testSearch[i].PortCode == searchValue)
+            //        if (testSearch[i].PortCode.Contains(searchValue))
             //        {
             //            searchResultList.Add(testSearch[i]);
             //        }
@@ -213,9 +217,9 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
             //    Debug.WriteLine("Time elapsed (ns): {0}", timePerParse.Elapsed.TotalMilliseconds * 1000000);
             //    return View("Index", searchResultList);
 
-            //------------------------------------------- HASH MAP ---------------------------------------------
-            //HASH MAP
-            timePerParse = Stopwatch.StartNew();
+                //------------------------------------------- HASH MAP ---------------------------------------------
+
+
                 //find out what the type in the textbox.this line will find the html elemet with
                 //the name portName and find its value.it will then store it as a lowercase string
                 string searchValue = Request.Params["portName"];
@@ -242,22 +246,13 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
                     }
 
                     List<Port> searchResultList = new List<Port>();
+                    timePerParse = Stopwatch.StartNew();
+
+
                     if (portAll.ContainsKey(searchValue))
                     {
                         searchResultList.Add(portAll[searchValue]);
                     }
-
-                    //initalizing a list to store all the ports for the search results
-
-                    //iterating through each port
-                    //for (int i = 0; i < testSearch.Length; i++)
-                    //{
-                    //    if (testSearch[i].PortCode == searchValue)
-                    //    {
-                    //        searchResultList.Add(testSearch[i]);
-                    //    }
-                    //}
-
 
 
                     timePerParse.Stop();
@@ -268,7 +263,7 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
                     return View("Index", searchResultList);
 
 
-                }
+            }
             //if sort alphabeticlly button pressed
             else if (searchType == "portSortAZ")
             {

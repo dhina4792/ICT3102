@@ -191,6 +191,7 @@
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Controllers\STIFFileManagementController.cs" />
     <Compile Include="Controllers\VesselController.cs" />
+    <Compile Include="CustomFunction\RemoveETTags.cs" />
     <Compile Include="DAL\CRUDGateway.cs" />
     <Compile Include="DAL\DataGateway.cs" />
     <Compile Include="DAL\ICRUDGateway.cs" />
