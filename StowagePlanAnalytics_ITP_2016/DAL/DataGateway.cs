@@ -84,6 +84,26 @@ namespace StowagePlanAnalytics_ITP_2016.DAL
 
             return service;
         }
+        public IEnumerable<Port> getFirstPort(string serviceCode)
+        {
+            string query = "select port.* from port where port.PortCode=(SELECT ServicePort.portcode FROM ServicePort where ServicePort.ServiceCode = (select service.ServiceCode from service where Service.ServiceCode = '" + serviceCode + "') ORDER BY ServicePort.SequenceNo ASC LIMIT 1)";
+            IEnumerable<Port> result = db.Database.SqlQuery<Port>(query).ToList();
+            // If no result found,
+            if (result.Count() == 0)
+            {
+                // return null model
+                return null;
+            }
+
+            //List<string> serviceList = new List<string>();
+            //// Populate the serviceList with the query result
+            //serviceList.Add("All");
+            //foreach (var row in result)
+            //{
+            //    serviceList.Add(row);
+            //}
+            return result;
+        }
         public List<SelectListItem> GetClassListItems(string VesselTEUClassCode)
         {
             List<SelectListItem> ClasslistItems = new List<SelectListItem>();

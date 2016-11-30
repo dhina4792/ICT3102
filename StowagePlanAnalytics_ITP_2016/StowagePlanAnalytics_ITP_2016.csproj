@@ -504,6 +504,7 @@
     <Content Include="Views\Service\DeleteConfirmed.cshtml" />
     <Content Include="Views\Port\DeleteConfirmed.cshtml" />
     <Content Include="Views\Vessel\DeleteConfirmed.cshtml" />
+    <Content Include="Views\File\FirstPort.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

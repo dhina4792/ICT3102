@@ -23,7 +23,19 @@ namespace StowagePlanAnalytics_ITP_2016.Controllers
         {
             return RedirectToAction("Upload");
         }
+        public ActionResult FirstPort()
+        {
+            return View("FirstPort");
+        }
+        [HttpPost]
+        public ActionResult FirstPortSearch(FormCollection collection)
+        {
+            string searchValue = Request.Params["serviceName"];
+            DataGateway dg = new DataGateway();
+            var portResults = dg.getFirstPort(searchValue);
 
+            return View("FirstPort", portResults);
+        }
         public ActionResult _PartialViewServiceUploadFiles(string serviceCode)
         {
             // Retrieve Data from database

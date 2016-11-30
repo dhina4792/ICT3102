@@ -1,0 +1,46 @@
+﻿@model IEnumerable<StowagePlanAnalytics_ITP_2016.Models.Port>
+@{
+    ViewBag.Title = "FirstPort";
+}
+
+<h2>FirstPort</h2>
+
+<div class="container-fluid">
+
+    <hr />
+    <div class="row">
+        <form action="/File/FirstPortSearch" method="Post">
+
+            <div class="col-md-2">
+                <fieldset class="form-group">
+                    <label for="serviceName">Service Code:</label>
+                    <input type="text" class="form-control" name="serviceName" id='serviceName'>
+                    <button type="submit" name="btnSearch" value="portSearch" class="btn btn-delete btn-primary pull-right"><span class="glyphicon glyphicon-search"></span> Search</button>
+
+                </fieldset>
+            </div>
+        </form>
+    </div>
+</div>
+    <table style="width:100%" border="1">
+        <tr>
+            <th>Port Name:</th>
+            <th>Port Code:</th>
+            <th>Number of Cranes:</th>
+        </tr>
+        @{
+            if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.PortName</td>
+                        <td>@item.PortCode</td>
+                        <td>@item.CostOfMove</td>
+                    </tr>
+
+                }
+            }
+
+        }
+    </table>
