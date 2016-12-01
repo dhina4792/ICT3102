@@ -8,16 +8,14 @@
     <meta name="author" content="">
     <title>@ViewBag.Title</title>
     <!-- Bootstrap core CSS -->
-    @Styles.Render("~/Content/css")
-    @*Rendering for custom css files for specific pages*@
-    @RenderSection("Styles", required: false)
-    @Scripts.Render("~/bundles/modernizr")
-    @Scripts.Render("~/bundles/jquery")
-    @*Reddering for custom JavaScript files for specific pages*@
-    @RenderSection("JavaScript", required: false)
-    @RenderSection("JavaScriptForTesting", required: false)
+    @Styles.Render("~/Content/allCss")
 
 
+@*@section Styles
+{
+    @Styles.Render()
+}
+@{*@
 </head>
 <body>
     <div class="top-bar">
@@ -42,7 +40,6 @@
             @RenderBody()
         </div>
     </div>
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+    <script src="../bundles/allJavaScripts"></script>
 </body>
 </html>
